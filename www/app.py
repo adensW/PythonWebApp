@@ -2,10 +2,6 @@
 #-*- coding :utf-8 -*-
 
 __author__="adensW"
-
-'''
-Python web app 
-'''
 import logging;logging.basicConfig(level=logging.INFO)
 
 import asyncio ,os,json,time
