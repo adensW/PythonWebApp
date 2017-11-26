@@ -90,7 +90,7 @@ class TextField(Field):
     def __init__(self, name=None, default=None):
         super().__init__(name, 'text', False, default)
 
-class ModelMeteclass(type):
+class ModelMetaclass(type):
     def __new__(cls,name,bases,attrs):
         if name=='Model':
             return type.__new__(cls,name,bases,attrs)
@@ -98,16 +98,16 @@ class ModelMeteclass(type):
         logging.info('found model: %s (table: %s)' % (name,tableName))
         mappings =dict()
         fields = []
-        primary_key = None
+        primaryKey = None
         for k,v in attrs.items():
             if isinstance(v,Field):
                 logging.info('found mapping:%s==>%s' % (k,v))
                 mappings[k] = v
                 if v.primary_key:
                     #found primary_key
-                    if primary_key:
+                    if primaryKey:
                         raise  StandardError('Duplicate primary key for field: %s' % k)
-                    primary_key = k
+                    primaryKey = k
                 else:
                     fields.append(k)
         if not primaryKey:
