@@ -28,7 +28,7 @@
     }
     $(function() {
         getJSON('/api/blogs', {
-            page: 1
+            page: {{page_index}}
         }, function(err, results) {
             if (err) {
                 return fatal(err);

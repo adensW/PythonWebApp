@@ -178,6 +178,13 @@ def manage_blogs(*, page='1'):
         'page_index': get_page_index(page)
     }
 
+@get('/manage/comments')
+def manage_comments(*, page='1'):
+    return {
+        '__template__': 'manage_comments.html',
+        'page_index': get_page_index(page)
+    }
+
 @get('/manage/blogs/create')
 def manage_create_blog():
     return {
@@ -186,6 +193,13 @@ def manage_create_blog():
         'action': '/api/blogs'
     }
 
+@get('/manage/blogs/edit')
+def manage_edit_blog(*, id):
+    return {
+        '__template__': 'manage_blog_edit.html',
+        'id': id,
+        'action': '/api/blogs/%s' % id
+    }
 
 
 @get('/api/blogs')
@@ -230,3 +244,28 @@ def api_create_comments(id,request,*,content):
     yield from comment.save()
     return comment
 
+@post('/api/blogs/{id}/delete')
+def api_delete_blog(request, *, id):
+    check_admin(request)
+    blog = yield from Blog.find(id)
+    yield from blog.remove()
+    return dict(id=id)
+
+@get('/api/comments')
+def api_comments(*, page='1'):
+    page_index = get_page_index(page)
+    num = yield from Comment.findNumber('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, comments=())
+    comments = yield from Comment.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, comments=comments)
+
+@post('/api/comments/{id}/delete')
+def api_delete_comments(id, request):
+    check_admin(request)
+    c = yield from Comment.find(id)
+    if c is None:
+        raise APIResourceNotFoundError('Comment')
+    yield from c.remove()
+    return dict(id=id)
