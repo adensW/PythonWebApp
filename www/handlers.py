@@ -185,6 +185,13 @@ def manage_comments(*, page='1'):
         'page_index': get_page_index(page)
     }
 
+@get('/manage/users')
+def manage_users(*, page='1'):
+    return {
+        '__template__': 'manage_users.html',
+        'page_index': get_page_index(page)
+    }
+
 @get('/manage/blogs/create')
 def manage_create_blog():
     return {
@@ -269,3 +276,15 @@ def api_delete_comments(id, request):
         raise APIResourceNotFoundError('Comment')
     yield from c.remove()
     return dict(id=id)
+
+@get('/api/users')
+def api_get_users(*, page='1'):
+    page_index = get_page_index(page)
+    num = yield from User.findNumber('count(id)')
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, users=())
+    users = yield from User.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    for u in users:
+        u.passwd = '******'
+    return dict(page=p, users=users)
