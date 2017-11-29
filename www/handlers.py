@@ -8,7 +8,7 @@ __author__ = 'adensW'
 import re, time, json, logging, hashlib, base64, asyncio
 from aiohttp import web
 from adenweb import get, post
-from apis import Page, APIValueError, APIError,APIPermissionError
+from apis import Page, APIValueError, APIError,APIPermissionError,APIResourceNotFoundError
 from models import User, Comment, Blog, next_id
 
 from config import configs
@@ -186,6 +186,8 @@ def manage_create_blog():
         'action': '/api/blogs'
     }
 
+
+
 @get('/api/blogs')
 def api_blogs(*, page='1'):
     page_index = get_page_index(page)
@@ -213,3 +215,18 @@ def api_create_blog(request, *, name, summary, content):
     blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, name=name.strip(), summary=summary.strip(), content=content.strip())
     yield from blog.save()
     return blog
+
+@post('/api/blogs/{id}/comments')
+def api_create_comments(id,request,*,content):
+    user = request.__user__
+    if user is None:
+        raise APIPermissionError('Please signin first')
+    if not content or not content.strip:
+        raise APIValueError('content')
+    blog = yield from Blog.find(id)
+    if blog is None:
+        raise APIResourceNotFoundError('Blog')
+    comment  = Comment(blog_id = blog.id,user_id = user.id,user_name = user.name,user_image = user.image,content= content.strip())
+    yield from comment.save()
+    return comment
+
