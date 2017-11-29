@@ -1,0 +1,56 @@
+/* ===============aden-navbar==================== */
+
+.aden-navbar {
+    background: #eee;
+    color: #444
+}
+
+.aden-navbar:before,
+.aden-navbar:after {
+    content: " ";
+    display: table
+}
+
+.aden-navbar:after {
+    clear: both
+}
+
+.aden-container {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    max-width: 980px;
+    padding: 0 25px
+}
+
+@media (min-width:1220px) {
+    .aden-container {
+        max-width: 1200px;
+        padding: 0 35px
+    }
+}
+
+.aden-container-center {
+    margin-left: auto;
+    margin-right: auto
+}
+
+.aden-navbar-brand {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+    height: 40px;
+    padding: 0 15px;
+    float: left
+}
+
+.aden-navbar-nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    float: left
+}
+
+.aden-navbar-nav>li {
+    float: left;
+    position: relative
+}
