@@ -171,6 +171,10 @@ def get_blog(id):
         'comments': comments
     }
 
+@get('/manage')
+def manage():
+    return 'redirect:/manage/comments'
+
 @get('/manage/blogs')
 def manage_blogs(*, page='1'):
     return {
