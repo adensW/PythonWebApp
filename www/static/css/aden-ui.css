@@ -39,8 +39,15 @@
     box-sizing: border-box;
     display: block;
     height: 40px;
-    padding: 0 15px;
-    float: left
+    padding: 0px 15px;
+    float: left;
+    
+}
+.aden-navbar-brand-vertcal{
+    vertical-align: baseline;
+    text-align: center;
+    line-height: 2rem;
+    font-size: 2rem;
 }
 
 .aden-navbar-nav {
@@ -52,5 +59,6 @@
 
 .aden-navbar-nav>li {
     float: left;
-    position: relative
+    position: relative;
+    margin:0px 2px 0px 2px;
 }
