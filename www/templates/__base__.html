@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <!-- {% macro pagination(url, page) %}
-<ul class="uk-pagination">
+<ul class="aden-pagination">
     {% if page.has_previous %}
         <li><a href="{{ url }}{{ page.page_index - 1 }}"><i class="uk-icon-angle-double-left"></i></a></li>
     {% else %}
-        <li class="uk-disabled"><span><i class="uk-icon-angle-double-left"></i></span></li>
+        <li class="aden-disabled"><span><i class="uk-icon-angle-double-left"></i></span></li>
     {% endif %}
-        <li class="uk-active"><span>{{ page.page_index }}</span></li>
+        <li class="aden-active"><span>{{ page.page_index }}</span></li>
     {% if page.has_next %}
         <li><a href="{{ url }}{{ page.page_index + 1 }}"><i class="uk-icon-angle-double-right"></i></a></li>
     {% else %}
-        <li class="uk-disabled"><span><i class="uk-icon-angle-double-right"></i></span></li>
+        <li class="aden-disabled"><span><i class="uk-icon-angle-double-right"></i></span></li>
     {% endif %}
 </ul>
 {% endmacro %} -->
@@ -23,8 +23,8 @@
     <link rel="stylesheet" href="/static/css/aden-ui.css" />
     <link rel="stylesheet" href="/static/css/aden-icon.css" />
     <link rel="stylesheet" href="/static/css/aden-color.css" />
-    <link rel="stylesheet" href="/static/css/uikit.min.css">
-    <link rel="stylesheet" href="/static/css/uikit.gradient.min.css">
+    <!-- <link rel="stylesheet" href="/static/css/uikit.min.css"> -->
+    <!-- <link rel="stylesheet" href="/static/css/uikit.gradient.min.css"> -->
     <link rel="stylesheet" href="/static/css/awesome.css" />
 
     <script src="/static/js/jquery.min.js"></script>
@@ -32,8 +32,7 @@
     <script src="/static/js/uikit.min.js"></script>
     <script src="/static/js/sticky.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
-    <script src="/static/js/awesome.js"></script>
-    {% block beforehead %}
+    <script src="/static/js/awesome.js"></script> {% block beforehead %}
     <!-- before head  -->{% endblock %}
 </head>
 
@@ -42,30 +41,41 @@
         <div class="aden-container aden-container-center">
             <a href="/" class="aden-navbar-brand aden-navbar-brand-vertcal">MUD_GAME</a>
             <ul class="aden-navbar-nav">
-                <li data-url="blogs"><a href="/"><i class="ui-icon-home"></i>Games</a></li>
-                <li><a target="_blank" href="http://www.adens.cn">Blogs</a></li>
+                <li data-url="blogs">
+                    <a href="/">
+                        <i class="ui-icon-home"></i>Games</a>
+                </li>
+                <li>
+                    <a target="_blank" href="http://www.adens.cn">Blogs</a>
+                </li>
             </ul>
-            <div class="aden-navbar-flip">
+            <div class="aden-float-right">
                 <ul class="aden-navbar-nav">
                     {% if __user__ %}
-                    <li class="aden-parent" data-aden-dropdown>
-                        <a href="#0"><i class="uk-icon-user"></i> {{ __user__.name }}</a>
-                        <div class="aden-dropdown aden-dropdown-navbar">
-                            <ul class="aden-nav aden-nav-navbar">
-                                <li><a href="/signout"><i class="uk-icon-sign-out"></i> 登出</a></li>
-                            </ul>
-                        </div>
+                    <li>
+                        <a href="#0">
+                            <i class="uk-icon-user"></i> {{ __user__.name }}</a>
+                    </li>
+                    <li>
+                        <a href="/signout">
+                            <i class="uk-icon-sign-out"></i> 登出</a>
                     </li>
                     {% else %}
-                    <li><a href="/signin"><i class="uk-icon-sign-in"></i> 登陆</a></li>
-                    <li><a href="/register"><i class="uk-icon-edit"></i> 注册</a></li>
+                    <li>
+                        <a href="/signin">
+                            <i class="uk-icon-sign-in"></i> 登陆</a>
+                    </li>
+                    <li>
+                        <a href="/register">
+                            <i class="uk-icon-edit"></i> 注册</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="uk-container uk-container-center">
+    <div class="aden-container aden-container-center">
         <div class="uk-grid">
             <!-- content -->
             {% block content %} {% endblock %}
@@ -73,19 +83,19 @@
         </div>
     </div>
 
-    <div class="uk-margin-large-top" style="background-color:#eee; border-top:1px solid #ccc;">
-        <div class="uk-container uk-container-center uk-text-center">
-            <div class="uk-panel uk-margin-top uk-margin-bottom">
-                <p> 
-                    <a target="_blank" href="https://github.com/adensW" class="uk-icon-button uk-icon-github"></a>   
-                    <a target="_blank" href="https://twitter.com/Dragon_Aden" class="uk-icon-button uk-icon-twitter"></a>
-                </p>
-                <p><a href="www.adens.cn">adens.cn</a>. Copyright &copy; 2017. [<a href="/manage/blogs" target="_blank">Manage</a>]</p>
-                <p><a href="www.adens.cn" target="_blank">www.adens.cn</a>. All rights reserved.</p>
-            </div>
 
-        </div>
+    <div class="aden-container-center">
+        <p>
+            <a target="_blank" href="https://github.com/adensW" class="uk-icon-button uk-icon-github"></a>
+            <a target="_blank" href="https://twitter.com/Dragon_Aden" class="uk-icon-button uk-icon-twitter"></a>
+        </p>
+        <p>
+            <a href="http://www.adens.cn">adens.cn</a>. Copyright &copy; 2017. [<a href="/manage/blogs" target="_blank">Manage</a>]</p>
+        <p>
+            <a href="http://www.adens.cn" target="_blank">www.adens.cn</a>. All rights reserved.</p>
     </div>
+    
+
 </body>
 
 </html>

@@ -1,3 +1,12 @@
+a{
+    text-decoration: none;   
+}
+a:active,
+a:hover {
+    outline: 0
+}
+
+
 /* ===============aden-navbar==================== */
 
 .aden-navbar {
@@ -31,7 +40,8 @@
 
 .aden-container-center {
     margin-left: auto;
-    margin-right: auto
+    margin-right: auto;
+    text-align: center;
 }
 
 .aden-navbar-brand {
@@ -46,7 +56,7 @@
 .aden-navbar-brand-vertcal{
     vertical-align: baseline;
     text-align: center;
-    line-height: 2rem;
+    line-height: 3rem;
     font-size: 2rem;
 }
 
@@ -54,11 +64,108 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    float: left
+    float: left;
+    vertical-align: middle;
+    line-height: 3rem;
+
 }
 
 .aden-navbar-nav>li {
     float: left;
     position: relative;
-    margin:0px 2px 0px 2px;
+    margin:0px 8px 0px 8px;
+}
+.aden-float-right{
+    float:right;
+}
+
+.aden-article-divider {
+    margin-bottom: 25px;
+    border-color: #ddd
+}
+
+*+.aden-article-divider {
+    margin-top: 25px
+}
+
+.aden-pagination {
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    font-size: 0
+}
+
+.aden-pagination:before,
+.aden-pagination:after {
+    content: " ";
+    display: table
+}
+
+.aden-pagination:after {
+    clear: both
+}
+
+.aden-pagination>li {
+    display: inline-block;
+    font-size: 1rem;
+    vertical-align: top
+}
+
+.aden-pagination>li:nth-child(n+2) {
+    margin-left: 5px
+}
+
+.aden-pagination>li>a,
+.aden-pagination>li>span {
+    display: inline-block;
+    min-width: 16px;
+    padding: 3px 5px;
+    line-height: 20px;
+    text-decoration: none;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    text-align: center
+}
+
+.aden-pagination>li>a {
+    background: #eee;
+    color: #444
+}
+
+.aden-pagination>li>a:hover,
+.aden-pagination>li>a:focus {
+    background-color: #f5f5f5;
+    color: #444;
+    outline: 0
+}
+
+.aden-pagination>li>a:active {
+    background-color: #ddd;
+    color: #444
+}
+
+.aden-pagination>.aden-active>span {
+    background: #00a8e6;
+    color: #fff
+}
+
+.aden-pagination>.aden-disabled>span {
+    background-color: #f5f5f5;
+    color: #999
+}
+
+.aden-pagination-previous {
+    float: left
+}
+
+.aden-pagination-next {
+    float: right
+}
+
+.aden-pagination-left {
+    text-align: left
+}
+
+.aden-pagination-right {
+    text-align: right
 }

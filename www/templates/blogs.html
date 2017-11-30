@@ -5,23 +5,18 @@
 
 {% endblock %} {% block content %}
 
-<div class="uk-width-medium-3-4">
+<div class="aden-content">
     {% for blog in blogs %}
-    <article class="uk-article">
+    <article class="aden-article">
         <h2><a href="/blog/{{ blog.id }}">{{ blog.name }}</a></h2>
-        <p class="uk-article-meta">发表于{{ blog.created_at|datetime }}</p>
+        <p class="adenarticle-meta">发表于{{ blog.created_at|datetime }}</p>
         <p>{{ blog.summary }}</p>
-        <p><a href="/blog/{{ blog.id }}">继续阅读 <i class="uk-icon-angle-double-right"></i></a></p>
+        <p><a href="/blog/{{ blog.id }}">开始游戏 <i class="uk-icon-angle-double-right"></i></a></p>
     </article>
-    <hr class="uk-article-divider"> {% endfor %}
+    <hr class="aden-article-divider"> {% endfor %}
     {{ pagination('/?page=', page) }}
 </div>
 
-<div class="uk-width-medium-1-4">
-    <div class="uk-panel uk-panel-header">
-        <h3 class="uk-panel-title">友情链接</h3>
-        
-    </div>
-</div>
+
 
 {% endblock %}
