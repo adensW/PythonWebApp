@@ -134,6 +134,11 @@ def index(*, page='1'):
         'page': page,
         'blogs': blogs
     }
+@get('/game')
+def game():
+    return {
+        '__template__':'game.html'
+}
 
 @post('/api/users')
 def api_register_user(*, email, name, passwd):
