@@ -1,0 +1,17 @@
+.screen-bg{
+    width: 500px;
+    height:400px;
+    background-color: gray;
+}
+.screen-display{
+    margin:auto auto;
+    width: 98%;
+    height:99%;
+    background: white;
+    border: 2px solid green;
+}
+.interactive{
+    height:50px;
+    width:500px;
+    background: gray;
+}
