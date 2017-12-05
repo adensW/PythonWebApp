@@ -87,12 +87,4 @@ function remove_children(parent){
         this._children[0].remove()
         this._children_count =  parent.childElementCount;    
     }
-  
 }
-// var e = new engine();
-// e.init("engine")
-
-// $("#clear").on('click',function(){
-//     e.clearscreen();
-// })
-// e.displayText("welcone fellow",1);
