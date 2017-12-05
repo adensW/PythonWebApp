@@ -40,7 +40,11 @@ function engine(){
     this.getInteractive = function(){
         return this.interactive
     }
+    this.clearscreen =function(){
+        this.screen.innerHTML='';
+    }
     this.displayText = function(text,place,opt){
+        console.log('dislay Text '+text+'opt'+opt)
         if(arguments.length==0){
             var text = document.createElement("p");
             text.innerHTML = "Waitting..."
@@ -74,6 +78,7 @@ function engine(){
 
 
 function remove_children(parent){
+    console.log("remove children in"+parent)
     var _children_count =  parent.childElementCount;
     var _children = parent.children;
     var i=0;
@@ -84,8 +89,10 @@ function remove_children(parent){
     }
   
 }
-var e = new engine();
-e.init("engine")
-// e.displayText();
+// var e = new engine();
+// e.init("engine")
 
-e.displayText("welcone fellow",1);
+// $("#clear").on('click',function(){
+//     e.clearscreen();
+// })
+// e.displayText("welcone fellow",1);
