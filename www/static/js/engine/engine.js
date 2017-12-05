@@ -1,15 +1,3 @@
-// var count = 11;
-// var engine = {
-//     count:0,
-//     start:function(){
-//             this.count=this.count+1;
-//             console.log(this.count);
-//             alert('engine start'+this.count);
-//         } 
-// }
-
-// engine.start();
-// engine.start();
 var engine_screen = "<div class=\"screen-bg\"><div class=\"screen-display\"><\/div><div class=\"interactive\"><\/div><\/div>";
 function engine(){
     
@@ -43,22 +31,25 @@ function engine(){
     this.clearscreen =function(){
         this.screen.innerHTML='';
     }
-    this.displayText = function(text,place,opt){
+    this.displayText = function(text,opt){
         console.log('dislay Text '+text+'opt'+opt)
         if(arguments.length==0){
-            var text = document.createElement("p");
-            text.innerHTML = "Waitting..."
-            var p = this.getScreen()
-            p.appendChild(text)
-            
+            var elm_p = document.createElement("p");
+            elm_p.innerText = "Waitting..."
+            var temp = this.getScreen();
+            temp.appendChild(elm_p)
         }
         else if(arguments.length==1){
-
+            var elm_p = document.createElement("p");
+            elm_p.innerText = text
+            var temp = this.getScreen();
+            temp.appendChild(elm_p)
         }else if(arguments.length==2){
             var count= 0
             var t
             var elm_p = document.createElement('p')
-            this.screen.appendChild(elm_p)
+            var temp = this.getScreen();
+            temp.appendChild(elm_p)
             function typeText(){
                 // alert(elm_p+""+count)
                 elm_p.innerText=text.substr(0,count)
