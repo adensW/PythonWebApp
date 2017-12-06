@@ -65,6 +65,14 @@ function engine(){
         }
         
     }
+    this.addButton = function(value){
+        var btn = document.createElement("button")
+        
+        btn.appendChild(document.createTextNode(value))
+        // btn.setAttribute("value",value)
+        this.interactive.appendChild(btn)
+        return btn
+    }
 }
 
 

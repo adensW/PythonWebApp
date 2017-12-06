@@ -4,6 +4,7 @@ function init(elm){
     e.init("engine")
 }
 
+
 function displayText(text,option){
     if(arguments.length==0){
         e.displayText()
@@ -14,4 +15,7 @@ function displayText(text,option){
     }else if(arguments.length==3){
          
     }
+}
+function addButton(value){
+    return e.addButton(value)
 }
