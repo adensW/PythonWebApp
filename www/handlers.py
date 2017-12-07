@@ -217,6 +217,11 @@ def manage_edit_blog(*, id):
         'action': '/api/blogs/%s' % id
     }
 
+@get("/manage/games/edit")
+def manage_edit_game():
+    return {
+        '__template__':'manage_game_edit.html'
+    }
 
 @get('/api/blogs')
 def api_blogs(*, page='1'):
@@ -297,3 +302,4 @@ def api_get_users(*, page='1'):
     for u in users:
         u.passwd = '******'
     return dict(page=p, users=users)
+

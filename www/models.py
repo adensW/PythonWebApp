@@ -9,7 +9,7 @@ __author__ = 'adensW'
 
 import time, uuid
 
-from orm import Model, StringField, BooleanField, FloatField, TextField
+from orm import Model, StringField, BooleanField, FloatField, TextField,IntegerField
 
 def next_id():
     return '%015d%s000' % (int(time.time() * 1000), uuid.uuid4().hex)
@@ -47,3 +47,28 @@ class Comment(Model):
     user_image = StringField(ddl='varchar(500)')
     content = TextField()
     created_at = FloatField(default=time.time)
+
+class Stage(Model):
+    __table__='stage'
+    id = IntegerField(primary_key=True)
+    stagename = StringField(ddl='varchar(50)')
+    process = IntegerField()
+
+class Story(Model):
+    __table__='story'
+    id = IntegerField(primary_key=True)
+    stageid=IntegerField()
+    story = TextField()
+    author = StringField(ddl='varchar(50)')
+
+class Chose(Model):
+    __table__='chose'
+    id=IntegerField(primary_key=True)
+    storyid = IntegerField()
+    choose = StringField(ddl='varchar(50)')
+
+class refStory(Model):
+    __table__='refstory'
+    id=IntegerField(primary_key=True)
+    chooseid = IntegerField()
+    refstoryid = IntegerField()

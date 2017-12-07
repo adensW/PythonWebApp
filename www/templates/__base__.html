@@ -48,6 +48,11 @@
                 <li>
                     <a target="_blank" href="/game">Game</a>
                 </li>
+                {% if __user__ %}
+                <li>
+                    <a target="_blank" href="/manage/games/edit">Write Games</a>
+                </li>
+                {% endif %}
             </ul>
             <div class="aden-float-right">
                 <ul class="aden-navbar-nav">
