@@ -9,7 +9,7 @@ import re, time, json, logging, hashlib, base64, asyncio
 from aiohttp import web
 from adenweb import get, post
 from apis import Page, APIValueError, APIError,APIPermissionError,APIResourceNotFoundError
-from models import User, Comment, Blog, next_id
+from models import User, Comment, Blog, next_id,Stage,Story,Chose,refStory
 
 from config import configs
 
@@ -218,9 +218,11 @@ def manage_edit_blog(*, id):
     }
 
 @get("/manage/games/edit")
-def manage_edit_game():
+def manage_create_game():
     return {
-        '__template__':'manage_game_edit.html'
+        '__template__':'manage_game_edit.html',
+        'id':'',
+        'action':'/api/games'
     }
 
 @get('/api/blogs')
@@ -238,6 +240,22 @@ def api_get_blog(*, id):
     blog = yield from Blog.find(id)
     return blog
 
+@post('/api/blogs/{id}')
+def api_update_blog(id, request, *, name, summary, content):
+    check_admin(request)
+    blog = yield from Blog.find(id)
+    if not name or not name.strip():
+        raise APIValueError('name', 'name cannot be empty.')
+    if not summary or not summary.strip():
+        raise APIValueError('summary', 'summary cannot be empty.')
+    if not content or not content.strip():
+        raise APIValueError('content', 'content cannot be empty.')
+    blog.name = name.strip()
+    blog.summary = summary.strip()
+    blog.content = content.strip()
+    yield from blog.update()
+    return blog
+
 @post('/api/blogs')
 def api_create_blog(request, *, name, summary, content):
     check_admin(request)
@@ -250,6 +268,23 @@ def api_create_blog(request, *, name, summary, content):
     blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, name=name.strip(), summary=summary.strip(), content=content.strip())
     yield from blog.save()
     return blog
+from orm import IntegerField
+@post('/api/games')
+def api_create_game(request,*,process,stagename,story,chose,refstoryid):
+    tagid=next_id()
+    stage = Stage(tagid=tagid, stagename=stagename.strip(),process=process)
+    yield from stage.save()
+    args = tagid
+    stage = yield from Stage.findbycolumnname('tagid',args)
+
+    if stage is None:
+        raise APIResourceNotFoundError('stage')
+    
+    logging.error(stage.id)
+    # tagid = 
+    # story = Story()
+    
+    return stage
 
 @post('/api/blogs/{id}/comments')
 def api_create_comments(id,request,*,content):

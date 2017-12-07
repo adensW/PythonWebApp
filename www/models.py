@@ -51,12 +51,14 @@ class Comment(Model):
 class Stage(Model):
     __table__='stage'
     id = IntegerField(primary_key=True)
+    tagid = StringField(default=next_id,ddl='varchar(100)')
     stagename = StringField(ddl='varchar(50)')
     process = IntegerField()
 
 class Story(Model):
     __table__='story'
     id = IntegerField(primary_key=True)
+    tagid = StringField(default=next_id,ddl='varchar(100)')
     stageid=IntegerField()
     story = TextField()
     author = StringField(ddl='varchar(50)')
@@ -64,11 +66,13 @@ class Story(Model):
 class Chose(Model):
     __table__='chose'
     id=IntegerField(primary_key=True)
+    tagid = StringField(default=next_id,ddl='varchar(100)')
     storyid = IntegerField()
     choose = StringField(ddl='varchar(50)')
 
 class refStory(Model):
     __table__='refstory'
     id=IntegerField(primary_key=True)
+    tagid = StringField(default=next_id,ddl='varchar(100)')
     chooseid = IntegerField()
     refstoryid = IntegerField()

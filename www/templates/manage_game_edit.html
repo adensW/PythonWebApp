@@ -3,7 +3,54 @@
 {% block title %}编辑游戏{% endblock %}
 
 {% block beforehead %}
+<script>
+     var
+        ID = '{{ id }}',
+        action = '{{ action }}';
 
+    function initVM(mixdata) {
+        var vm = new Vue({
+            el: '#vm',
+            data: mixdata,
+            methods: {
+                submit: function(event) {
+                    event.preventDefault();
+                    var $form = $('#vm').find('form');
+                    $form.postJSON(action, this.$data, function(err, r) {
+                        if (err) {
+                            $form.showFormError(err);
+                        } else {
+                            return location.assign('/game');
+                        }
+                    });
+                }
+            }
+        });
+        $('#vm').show();
+    }
+    $(function() {
+        if (ID) {
+            getJSON('/api/game/' + ID, function(err, blog) {
+                if (err) {
+                    return fatal(err);
+                }
+                $('#loading').hide();
+                initVM(blog);
+            });
+        } else {
+            $('#loading').hide();
+            initVM({
+                process: '',
+                stagename: '',
+                story: '',
+                chose:'',
+                author:'',
+                refstoryid:''
+            });
+        }
+    });
+
+</script>
 
 {%endblock%}
 
@@ -14,23 +61,26 @@
     <div class="content-branch">
         <div></div>
     </div>
-    <div class="edit-area">
-        <form>
+    <div id='loading'></div>
+    <div class="edit-area" id='vm'>
+        <form v-on="submit:submit">
             <div class=''></div>
-            <div><span>进程: </span><input id='process'/></div>
+            <div><span>进程位置: </span><input v-model="process" name='process'/><span>进程名称: </span><input v-model="stagename" name="stagename" id='stagename'/></div>
             <div>
                 <p>事件</p>
-                <textarea id='story'></textarea>
+                <textarea v-model="story" name=story id='story'></textarea>
             </div>
             <div>
                 <p>选项:(#分割)</p>
-                <input id='chose'/>
+                <input v-model="chose" name="chose" id='chose'/>
+                <p>下一步故事ID:(对用选项#分割)</p>
+                <input v-model="refstoryid" name='refstoryid'/>
             </div>
             <div>
                 <p>作者:(默认登陆名#)</p>
                 <!-- 早期作者名显示 -->
                 <span class='aden-tag'>adensW</span>
-                <input id='author' /></div>
+                <input v-model="author" name='author' id='author' /></div>
             <div>
                 <button type="submit">保存</button>
             </div>

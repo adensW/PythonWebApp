@@ -222,6 +222,17 @@ class Model(dict, metaclass=ModelMetaclass):
             return None
         return cls(**rs[0])
 
+    @classmethod
+    @asyncio.coroutine
+    def findbycolumnname(cls,column_name,args):
+        ' find object by columname. '
+        rs = yield from select('%s where `%s`=?' % (cls.__select__, column_name),args , 1)
+        if len(rs) == 0:
+            return None
+        return cls(**rs[0])
+
+
+
     @asyncio.coroutine
     def save(self):
         args = list(map(self.getValueOrDefault, self.__fields__))
