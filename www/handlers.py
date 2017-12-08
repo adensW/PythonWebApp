@@ -274,21 +274,6 @@ def api_create_game(request,*,process,stagename,story,chose,refstoryid,author):
     check_admin(request)
     #若无 stagename 则不创建stage
     tagid=next_id()
-    # if not process or not process.strip():
-    #     raise APIValueError('process','process cannot be empty.')
-    # if stagename or stagename.strip():  
-    #     stage = Stage(tagid=tagid, stagename=stagename.strip(),process=process)
-    #     yield from stage.save()
-       
-    # args = tagid
-    # stage = yield from Stage.findbycolumnname('tagid',args)
-
-    # if stage is None:
-    #     raise APIResourceNotFoundError('stage')
-    
-    # logging.error(stage.id)
-    # tagid = 
-    # story = Story()
     if not story or not story.strip():
         raise APIValueError("story",'story cannot be empty.')
     if not process or not process.strip():
