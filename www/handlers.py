@@ -12,7 +12,7 @@ from apis import Page, APIValueError, APIError,APIPermissionError,APIResourceNot
 from models import User, Comment, Blog, next_id,Stage,Story,Chose,refStory
 
 from config import configs
-
+import adenutils.aden_utils
 import markdown2
 COOKIE_NAME = 'awesession'
 _COOKIE_KEY = configs.session.secret
@@ -270,21 +270,50 @@ def api_create_blog(request, *, name, summary, content):
     return blog
 from orm import IntegerField
 @post('/api/games')
-def api_create_game(request,*,process,stagename,story,chose,refstoryid):
+def api_create_game(request,*,process,stagename,story,chose,refstoryid,author):
+    check_admin(request)
+    #若无 stagename 则不创建stage
     tagid=next_id()
-    stage = Stage(tagid=tagid, stagename=stagename.strip(),process=process)
-    yield from stage.save()
-    args = tagid
-    stage = yield from Stage.findbycolumnname('tagid',args)
+    # if not process or not process.strip():
+    #     raise APIValueError('process','process cannot be empty.')
+    # if stagename or stagename.strip():  
+    #     stage = Stage(tagid=tagid, stagename=stagename.strip(),process=process)
+    #     yield from stage.save()
+       
+    # args = tagid
+    # stage = yield from Stage.findbycolumnname('tagid',args)
 
-    if stage is None:
-        raise APIResourceNotFoundError('stage')
+    # if stage is None:
+    #     raise APIResourceNotFoundError('stage')
     
-    logging.error(stage.id)
+    # logging.error(stage.id)
     # tagid = 
     # story = Story()
+    if not story or not story.strip():
+        raise APIValueError("story",'story cannot be empty.')
+    if not process or not process.strip():
+        raise APIValueError('process','process cannot be empty.')
+    if not chose or not chose.strip():
+        raise APIValueError('chose','chose cannot be empty.')
+    if not refstoryid or not refstoryid.strip():
+        raise APIValueError('refstoryid','refstoryid cannot be empty.')
     
-    return stage
+    story = Story(tagid = tagid,process=process.strip(),story=story.strip(),author=author.strip())
+    storyid =yield from Story.findbycolumnname("tagid",'00151272809336730536a55a20d4b01b4853c53a08639f2000')
+    # print(storyid.id)
+    yield from story.save()
+    l_chose = chose.split("#")
+    l_refstoryid = refstoryid.split("#")
+    for c in l_chose:
+        i=0
+        tagid = next_id()
+        choose = Chose(tagid=tagid,storyid=storyid.id,choose = c)
+        yield from choose.save()
+        chooseid= yield from Chose.findbycolumnname("tagid",tagid)
+        refstory = refStory(tagid = next_id(),chooseid=chooseid.id,refstoryid=l_refstoryid[i])
+        i=i+1
+        yield from refstory.save()
+    return story
 
 @post('/api/blogs/{id}/comments')
 def api_create_comments(id,request,*,content):

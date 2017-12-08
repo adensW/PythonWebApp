@@ -59,7 +59,7 @@ class Story(Model):
     __table__='story'
     id = IntegerField(primary_key=True)
     tagid = StringField(default=next_id,ddl='varchar(100)')
-    stageid=IntegerField()
+    process=IntegerField()
     story = TextField()
     author = StringField(ddl='varchar(50)')
 
