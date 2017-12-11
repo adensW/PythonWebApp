@@ -69,19 +69,19 @@ function ringComponent(x, y, outradius, innerradius, color) {
     this.defaultEndAngle = 360
     this.startAngle = 0
     this.endAngle = 360
-    
+    this.startPoint = 0//0上 1右2下3左
     this.Render = function () {
         context = branchArea.context
         context.fillStyle = color;
         context.beginPath();
         context.moveTo(this.x, this.y);
-        context.arc(this.x, this.y, this.outradius, Math.PI / 180 * this.startAngle, Math.PI / 180 * this.endAngle, false);
+        context.arc(this.x, this.y, this.outradius, Math.PI / 180 * (this.startAngle-90+(90*this.startPoint)), Math.PI / 180 * (this.endAngle-90+(90*this.startPoint)), false);
         context.closePath();
         context.fill();
         context.fillStyle = 'white';
         context.beginPath();
         context.moveTo(this.x, this.y);
-        context.arc(this.x, this.y, this.innerradius, Math.PI / 180 * this.startAngle, Math.PI / 180 * this.endAngle, false);
+        context.arc(this.x, this.y, this.innerradius, Math.PI / 180 * (this.startAngle-90+(90*this.startPoint)), Math.PI / 180 * (this.endAngle-90+(90*this.startPoint)), false);
         context.closePath();
         context.fill();
         // （x-a)2+(y-b)2=r2
