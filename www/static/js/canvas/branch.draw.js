@@ -84,13 +84,20 @@ var branchArea = {
         })
     }
 }
-function pen(x, y, bold = 1, color = 'black') {
-    context = branchArea.context
-    context.fillStyle = color;
-    context.beginPath();
-    context.arc(x, y, bold, Math.PI / 180 * 0, Math.PI / 180 * 360, false);
-    context.closePath();
-    context.fill();
+function circleComponent(x, y, radius, color = 'black') {
+    this.x = x
+    this.y = y
+    this.radius = radius
+    this.color = color
+    this.Render = function(){
+        context = branchArea.context
+        context.fillStyle = color;
+        context.beginPath();
+        context.arc(this.x, this.y,this.radius , Math.PI / 180 * 0, Math.PI / 180 * 360, false);
+        context.closePath();
+        context.fill();
+    }
+    
 }
 function ringComponent(x, y, outradius, innerradius, color) {
     this.defaultX = x
@@ -151,26 +158,36 @@ function ringComponent(x, y, outradius, innerradius, color) {
 
 }
 function Line(startX, startY, endX, endY, bold = 1, color = 'black') {
+    context = branchArea.context
+    context.strokeStyle=color;
+    context.lineWidth=bold;
+    
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.lineTo(endX, endY);
+    context.stroke();
+    
+    
     // (y-endY)/(startY-endY) = (x-endX)/(startX-endX)
-    let x, y
-    if (startX - endX == 0) {
-        x = startX
-        for (y = startY; y <= endY; y++) {
-            pen(x, y, bold, color)
-        }
-    } else if (startY - endY == 0) {
-        y = startY
-        for (x = startX; x <= endX; x++) {
-            pen(x, y, bold, color)
-        }
-    } else {
-        for (x = startX; x <= endX; x++) {
-            y = (x - endX) / (startX - endX) * (startY - endY) + endY
-            // y=Math.floor(y)
-            pen(x, y, bold, color)
-        }
+    // let x, y
+    // if (startX - endX == 0) {
+    //     x = startX
+    //     for (y = startY; y <= endY; y++) {
+    //         pen(x, y, bold, color)
+    //     }
+    // } else if (startY - endY == 0) {
+    //     y = startY
+    //     for (x = startX; x <= endX; x++) {
+    //         pen(x, y, bold, color)
+    //     }
+    // } else {
+    //     for (x = startX; x <= endX; x++) {
+    //         y = (x - endX) / (startX - endX) * (startY - endY) + endY
+    //         // y=Math.floor(y)
+    //         pen(x, y, bold, color)
+    //     }
         // console.log(startX+','+startY+'=>'+endX+','+endY+':'+x+','+y)
-    }
+    
 }
 function animateData(startTime, lastTime, component) {
     this.startTime = startTime
@@ -221,7 +238,7 @@ function updateBranchArea() {
                 endX = checkpoint.stage[i].x
                 endY = checkpoint.stage[i].y - checkpoint.stage[i].outradius
                 // console.log(startX+','+startY+'=>'+endX+','+endY)
-                Line(startX, startY, endX, endY, 2, 'black')
+                Line(startX, startY, endX, endY, 3, 'black')
             }
         }
         for (let i = 0; i < checkpoint.story.length; i += 1) {
@@ -232,7 +249,7 @@ function updateBranchArea() {
                 endX = checkpoint.story[i].x
                 endY = checkpoint.story[i].y - checkpoint.story[i].outradius
                 // console.log(startX+','+startY+'=>'+endX+','+endY)
-                Line(startX, startY, endX, endY, 2, 'black')
+                Line(startX, startY, endX, endY, 4, 'blue')
             }
         }for (let i = 0; i < checkpoint.chose.length; i += 1) {
             checkpoint.chose[i].Render();
