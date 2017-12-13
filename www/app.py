@@ -145,10 +145,11 @@ def datetime_filter(t):
     dt = datetime.fromtimestamp(t)
     return u'%s年%s月%s日' % (dt.year, dt.month, dt.day)
 
-
+# python www/pymonitor.py www/app.py
 @asyncio.coroutine
 def init(loop):
-    yield from orm.create_pool(loop=loop, **configs.db)
+    logging.info(configs.database)
+    yield from orm.create_pool(loop=loop, **configs.database)
     app = web.Application(loop=loop, middlewares=[
         logger_factory, auth_factory, response_factory
     ])

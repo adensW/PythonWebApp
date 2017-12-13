@@ -8,7 +8,7 @@ Override configurations.
 __author__ = 'adensW'
 
 configs = {
-    'db': {
+    'database': {
         'host': '127.0.0.1'
     }
 }

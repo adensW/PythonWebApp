@@ -11,4 +11,4 @@ def datasplit(data,mark):
     l=data.split(mark)
     return l
 
-print(datasplit("wewewe#wewewe#saewew","#"))
+# print(datasplit("wewewe#wewewe#saewew","#"))

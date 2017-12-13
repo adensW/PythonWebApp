@@ -117,20 +117,19 @@ function ringComponent(x, y, outradius, innerradius, color) {
         context.arc(this.x, this.y, this.defaultOutradius, Math.PI / 180 * 0, Math.PI / 180 * 360, false);
         return context.isPointInPath(offsetX, offsetY);
     },
-        this.reset = function () {
-            this.x = this.defaultX
-            this.y = this.defaultY
-            this.outradius = this.defaultOutradius
-            this.innerradius = this.defaultInnerradius
-            this.startAngle = this.defaultStartAngle
-            this.endAngle = this.defaultEndAngle
-        }
+    this.reset = function () {
+        this.x = this.defaultX
+        this.y = this.defaultY
+        this.outradius = this.defaultOutradius
+        this.innerradius = this.defaultInnerradius
+        this.startAngle = this.defaultStartAngle
+        this.endAngle = this.defaultEndAngle
+    }
     this.setAnimation = function (type) {
         if (type == 'blink') {
             this.outradius = 15
             this.innerradius = 10
         }
-
     }
 
 }
@@ -144,27 +143,6 @@ function Line(startX, startY, endX, endY, bold = 1, color = 'black') {
     context.lineTo(endX, endY);
     context.closePath();
     context.stroke();
-    
-    
-    // (y-endY)/(startY-endY) = (x-endX)/(startX-endX)
-    // let x, y
-    // if (startX - endX == 0) {
-    //     x = startX
-    //     for (y = startY; y <= endY; y++) {
-    //         pen(x, y, bold, color)
-    //     }
-    // } else if (startY - endY == 0) {
-    //     y = startY
-    //     for (x = startX; x <= endX; x++) {
-    //         pen(x, y, bold, color)
-    //     }
-    // } else {
-    //     for (x = startX; x <= endX; x++) {
-    //         y = (x - endX) / (startX - endX) * (startY - endY) + endY
-    //         // y=Math.floor(y)
-    //         pen(x, y, bold, color)
-    //     }
-        // console.log(startX+','+startY+'=>'+endX+','+endY+':'+x+','+y)
     
 }
 function animateData(startTime, lastTime, component) {
@@ -320,31 +298,3 @@ Tree.prototype.traverseBF = function(callback) {
     }
 };
 
-// function start() {
-//     var tree = new Tree('one');
-
-//     tree._root.children.push(new Node('two'));
-//     tree._root.children[0].parent = tree;
-
-//     tree._root.children.push(new Node('three'));
-//     tree._root.children[1].parent = tree;
-
-//     tree._root.children.push(new Node('four'));
-//     tree._root.children[2].parent = tree;
-
-//     tree._root.children[0].children.push(new Node('five'));
-//     tree._root.children[0].children[0].parent = tree._root.children[0];
-
-//     tree._root.children[0].children.push(new Node('six'));
-//     tree._root.children[0].children[1].parent = tree._root.children[0];
-
-//     tree._root.children[2].children.push(new Node('seven'));
-//     tree._root.children[2].children[0].parent = tree._root.children[2];
-
-//     tree.traverseDF(function(node){
-//         console.log(node.data)
-//     })
-//     tree.traverseBF(function(node){
-//         console.log(node.data)
-//     })
-// }
