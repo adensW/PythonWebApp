@@ -21,6 +21,7 @@ var checkpoint = {
 checkpoint.prototype = {
 
 }
+var tree;
 var ringRenderList = []
 var animateList = []
 var _COLOR = {
@@ -46,41 +47,17 @@ var branchArea = {
     addMouseOverEvent: function () {
         let lastElement=[];
         this.canvas.addEventListener('mousemove', function (e) {
-            var check = checkMousePosition(e.offsetX, e.offsetY)
-            
-            // console.log('hello err'+check)
-            if (check.isIn) {
-                lastElement.push(check.element)
-                // console.log('hello'+check.index)
-                setAnimation('blink', check.element)
-                // animateList.push(checkpoint[check.index])
-
-                // console.log('hello'+window.ind)
-            } else {
-                for(let i = 0;i<lastElement.length;i++){
-                    lastElement.shift().reset()
-                }
-                // if(lastElement.element!=undefined&&lastElement.element!=null){
-                //     lastElement.element.reset()
-                // }
-                // check.element.reset()
-                // for (var i = 0; i < checkpoint.length; i++) {
-                //     // var newl = animateList.
-                //     checkpoint[i].reset()
-
-                // }
-            }
-
+            checkMousePosition(e.offsetX, e.offsetY)
         })
     },
     addClickEvent: function () {
         this.canvas.addEventListener('click', function (e) {
             var check = checkMousePosition(e.offsetX, e.offsetY)
 
-            if (check.isIn) {
-                console.log('hello')
-                animateList.push(new animateData(new Date().getTime(), 2000, check.element))
-            }
+            // if (check.isIn) {
+            //     console.log('hello')
+            //     animateList.push(new animateData(new Date().getTime(), 2000, check.element))
+            // }
         })
     }
 }
@@ -165,6 +142,7 @@ function Line(startX, startY, endX, endY, bold = 1, color = 'black') {
     context.beginPath();
     context.moveTo(startX, startY);
     context.lineTo(endX, endY);
+    context.closePath();
     context.stroke();
     
     
@@ -228,112 +206,54 @@ function updateBranchArea() {
             // animateList[i].component.reset()
         }
     }
-    // let x,y
-    
-        for (let i = 0; i < checkpoint.stage.length; i += 1) {
-            checkpoint.stage[i].Render();
-            if (i != 0) {
-                startX = checkpoint.stage[i - 1].x
-                startY = checkpoint.stage[i - 1].y + checkpoint.stage[i - 1].outradius
-                endX = checkpoint.stage[i].x
-                endY = checkpoint.stage[i].y - checkpoint.stage[i].outradius
-                // console.log(startX+','+startY+'=>'+endX+','+endY)
-                Line(startX, startY, endX, endY, 3, 'black')
-            }
+
+    tree.traverseBF(function(node){
+        // console.log(node.data)
+        if(node.data!='root'&&node.data!=undefined&&node.data!=null){
+            node.data.component.Render()
         }
-        for (let i = 0; i < checkpoint.story.length; i += 1) {
-            checkpoint.story[i].Render();
-            if (i != 0) {
-                startX = checkpoint.story[i - 1].x
-                startY = checkpoint.story[i - 1].y + checkpoint.story[i - 1].outradius
-                endX = checkpoint.story[i].x
-                endY = checkpoint.story[i].y - checkpoint.story[i].outradius
-                // console.log(startX+','+startY+'=>'+endX+','+endY)
-                Line(startX, startY, endX, endY, 4, 'blue')
-            }
-        }for (let i = 0; i < checkpoint.chose.length; i += 1) {
-            checkpoint.chose[i].Render();
-            if (i != 0) {
-                startX = checkpoint.chose[i - 1].x
-                startY = checkpoint.chose[i - 1].y + checkpoint.chose[i - 1].outradius
-                endX = checkpoint.chose[i].x
-                endY = checkpoint.chose[i].y - checkpoint.chose[i].outradius
-                // console.log(startX+','+startY+'=>'+endX+','+endY)
-                Line(startX, startY, endX, endY, 2, 'black')
-            }
-        }for (let i = 0; i < checkpoint.refstory.length; i += 1) {
-            checkpoint.refstory[i].Render();
-            if (i != 0) {
-                startX = checkpoint.refstory[i - 1].x
-                startY = checkpoint.refstory[i - 1].y + checkpoint.refstory[i - 1].outradius
-                endX = checkpoint.refstory[i].x
-                endY = checkpoint.refstory[i].y - checkpoint.refstory[i].outradius
-                // console.log(startX+','+startY+'=>'+endX+','+endY)
-                Line(startX, startY, endX, endY, 2, 'black')
-            }
-        }
+        
+    })
     // window.requestAnimationFrame(updateBranchArea)
 }
 function startDrawBranch() {
     // window.requestAnimationFrame(updateBranchArea)
-    checkpoint.push(new ringComponent(20, 20, 10, 7, _COLOR.stage), 'stage')
-    checkpoint.push(new ringComponent(20, 50, 10, 7, _COLOR.stage), 'stage')
-    checkpoint.push(new ringComponent(20, 80, 10, 7, _COLOR.stage), 'stage')
-    checkpoint.push(new ringComponent(20, 110, 10, 7, _COLOR.stage), 'stage')
-    checkpoint.push(new ringComponent(20, 140, 10, 7, _COLOR.stage), 'stage')
-    checkpoint.push(new ringComponent(20, 170, 10, 7, _COLOR.stage), 'stage')
-    checkpoint.push(new ringComponent(20, 200, 10, 7, _COLOR.stage), 'stage')
-    checkpoint.push(new ringComponent(20, 230, 10, 7, _COLOR.stage), 'stage')
-    checkpoint.push(new ringComponent(50, 30, 10, 7, _COLOR.story), 'story')
-    checkpoint.push(new ringComponent(50, 60, 10, 7, _COLOR.story), 'story')
-    checkpoint.push(new ringComponent(50, 90, 10, 7, _COLOR.story), 'story')
-    checkpoint.push(new ringComponent(50, 120, 10, 7, _COLOR.story), 'story')
-    // for(let i = 0;i<checkpoint.length;i++){
+    tree = new Tree('root')
+    let y=20
+    for(let i =0;i<3;i++){
+        data = {
+            component:new ringComponent(20, y, 10, 7, _COLOR.stage),
+            type :'stage',
+            id:i
+        }
+        var node = new Node(data)
+        tree._root.children[i]=node
+        
+        y +=50
+    }
 
-    // }
     branchArea.start()
 
     branchArea.addMouseOverEvent()
     branchArea.addClickEvent()
 }
 function checkMousePosition(x, y) {
-    for (let index = 0; index < checkpoint.stage.length; index++) {
-        if (checkpoint.stage[index].isInPath(x, y)) {
-            return {
-                isIn: true,
-                index: index,
-                element:checkpoint.stage[index]
+   
+    tree.traverseBF(function(node){
+        if(node.data!='root'&&node.data!=undefined&&node.data!=null){
+            if(node.data.component.isInPath(x,y)){
+                 node.data.component.outradius = 15
+                 node.data.component.innerradius = 10
+               
             }
-        }
-    }
-    for (let index = 0; index < checkpoint.story.length; index++) {
-        if (checkpoint.story[index].isInPath(x, y)) {
-            return {
-                isIn: true,
-                index: index,
-                element:checkpoint.story[index]
+            else{
+                node.data.component.reset()
             }
+            // console.log(node.data.component)
         }
-    }
-    for (let index = 0; index < checkpoint.chose.length; index++) {
-        if (checkpoint.chose[index].isInPath(x, y)) {
-            return {
-                isIn: true,
-                index: index,
-                element:checkpoint.chose[index]
-            }
-        }
-    }
-    for (let index = 0; index < checkpoint.refstory.length; index++) {
-        if (checkpoint.refstory[index].isInPath(x, y)) {
-            return {
-                isIn: true,
-                index: index,
-                element:checkpoint.refstory[index]
-            }
-        }
-    }
-    return false
+        return false
+    })
+    
 }
 
 function everyinterval(n) {
@@ -355,3 +275,76 @@ function animate() {
 }
 
 requestAnimationFrame(animate);
+
+function Node(data) {
+    this.data = data
+    this.parent = null
+    this.children = []
+}
+
+function Tree(data) {
+    var node = new Node(data)
+    this._root = node
+}
+Tree.prototype.traverseDF = function (callback) {
+
+    // this is a recurse and immediately-invoking function 
+    (function recurse(currentNode) {
+        // step 2
+        for (var i = 0, length = currentNode.children.length; i < length; i++) {
+            // step 3
+            recurse(currentNode.children[i]);
+        }
+
+        // step 4   
+        callback(currentNode);
+
+        // step 1
+    })(this._root);
+
+};
+Tree.prototype.traverseBF = function(callback) {
+    var queue =[];
+     
+    queue.push(this._root);
+ 
+    currentTree = queue.shift();
+ 
+    while(currentTree){
+        for (var i = 0, length = currentTree.children.length; i < length; i++) {
+            queue.push(currentTree.children[i]);
+        }
+ 
+        callback(currentTree);
+        currentTree = queue.shift();
+    }
+};
+
+// function start() {
+//     var tree = new Tree('one');
+
+//     tree._root.children.push(new Node('two'));
+//     tree._root.children[0].parent = tree;
+
+//     tree._root.children.push(new Node('three'));
+//     tree._root.children[1].parent = tree;
+
+//     tree._root.children.push(new Node('four'));
+//     tree._root.children[2].parent = tree;
+
+//     tree._root.children[0].children.push(new Node('five'));
+//     tree._root.children[0].children[0].parent = tree._root.children[0];
+
+//     tree._root.children[0].children.push(new Node('six'));
+//     tree._root.children[0].children[1].parent = tree._root.children[0];
+
+//     tree._root.children[2].children.push(new Node('seven'));
+//     tree._root.children[2].children[0].parent = tree._root.children[2];
+
+//     tree.traverseDF(function(node){
+//         console.log(node.data)
+//     })
+//     tree.traverseBF(function(node){
+//         console.log(node.data)
+//     })
+// }
