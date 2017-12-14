@@ -151,6 +151,23 @@ function Line(startX, startY, endX, endY, bold = 1, color = 'black') {
     context.stroke();
 
 }
+function polyline(startX, startY, endX, endY, bold = 1, color = 'black'){
+    context = branchArea.context
+    context.beginPath();
+    context.strokeStyle = color;
+    context.lineWidth = bold;
+    context.lineCap="round";
+    context.moveTo(startX, startY);
+    var x2 = startX +(endX-startX)*(1/3)
+    var y2 = startY
+    var x3=startX +(endX-startX)*(2/3)
+    var y3 = endY
+    context.lineTo(x2, startY);
+    context.lineTo(x3, endY);
+    context.lineTo(endX, endY);
+    // context.closePath();
+    context.stroke();
+}
 function animateData(startTime, lastTime, component) {
     this.startTime = startTime
     this.lastTime = lastTime
@@ -218,13 +235,12 @@ function updateBranchArea() {
                     let endY = node.data.component.y-node.data.component.outradius
                     Line(startX,startY,endX,endY,4,'black')
                     // Line(lastNode.data.component.x, lastNode.data.component.y, node.data.component.x, node.data.component.y, 2, 'black')
-                }else 
-                if (lastNode.parent==tree||node.parent.data.uid != lastNode.parent.data.uid) {
+                }else if (lastNode.parent==tree||node.parent.data.uid != lastNode.parent.data.uid) {
                     let startX = node.parent.data.component.x+node.parent.data.component.outradius;
                     let startY = node.parent.data.component.y
                     let endX = node.data.component.x-node.data.component.outradius
                     let endY = node.data.component.y
-                    Line(startX,startY,endX,endY,4,'black')
+                    polyline(startX,startY,endX,endY,4,'blue')
                     // Line(node.parent.data.component.x, node.parent.data.component.y, node.data.component.x, node.data.component.y, 2, 'blue')
                     
                 } else {
@@ -314,11 +330,6 @@ function checkMousePosition(x, y) {
 
 }
 
-function everyinterval(n) {
-    if ((myGameArea.frameNo / n) % 1 == 0) { return true; }
-    return false;
-}
-
 startDrawBranch()
 
 var stats = new Stats();
@@ -341,9 +352,7 @@ function Node(data) {
 }
 
 function Tree(data) {
-    data:{
-        uid:122222
-    }
+   
     var node = new Node(data)
     this._root = node
 }
