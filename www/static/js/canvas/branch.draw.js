@@ -1,29 +1,6 @@
-var checkpoint = {
-    stage: [],
-    story: [],
-    chose: [],
-    refstory: [],
-    push: function (element, type) {
-        if (type == 'stage') {
-            this.stage.push(element)
-        }
-        if (type == 'story') {
-            this.story.push(element)
-        }
-        if (type == 'chose') {
-            this.chose.push(element)
-        }
-        if (type == 'refstory') {
-            this.refstory.push(element)
-        }
-    }
-}
-checkpoint.prototype = {
 
-}
 var tree;
-var ringRenderList = []
-var animateList = []
+
 var _COLOR = {
     stage: 'black',
     story: 'rgb(76,156,217)',
@@ -168,46 +145,12 @@ function polyline(startX, startY, endX, endY, bold = 1, color = 'black'){
     // context.closePath();
     context.stroke();
 }
-function animateData(startTime, lastTime, component) {
-    this.startTime = startTime
-    this.lastTime = lastTime
-    this.component = component
-    this.callNum = 0
-    this.isAnimateOver = function () {
-        this.callNum += 1
-        if (this.startTime + this.lastTime <= new Date().getTime()) {
-            return true
-        }
-        return false
-    }
-}
-setAnimation = function (type, o) {
 
-    if (type == 'blink') {
-        o.outradius = 15
-        o.innerradius = 10
-    }
-    // if(type=='liner'){
-    //     o.isAnimation = true
-    //     o.animEndAngle += 45
 
-    // }
-
-}
-var lastframe = 0
 
 function updateBranchArea() {
     branchArea.clear()
     branchArea.frameNo += 1;
-
-    for (var i = 0; i < animateList.length; i += 1) {
-        if (!animateList[i].isAnimateOver()) {
-            animateList[i].component.endAngle = 10 * (animateList[i].callNum)
-            // alert("pause")
-        } else {
-            // animateList[i].component.reset()
-        }
-    }
     let lastNode
     let firstTime = true
     tree.traverseBF(function (node) {
