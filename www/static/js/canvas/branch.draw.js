@@ -34,7 +34,7 @@ var branchArea = {
     canvas: document.getElementById("branch"),
     start: function () {
         this.canvas.width = 300
-        this.canvas.height = 500
+        this.canvas.height = 1080
         this.context = this.canvas.getContext('2d');
         this.frameNo = 0;
         // this.interval = setInterval(updateBranchArea,20);
@@ -45,7 +45,7 @@ var branchArea = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     addMouseOverEvent: function () {
-        let lastElement=[];
+        let lastElement = [];
         this.canvas.addEventListener('mousemove', function (e) {
             checkMousePosition(e.offsetX, e.offsetY)
         })
@@ -66,15 +66,15 @@ function circleComponent(x, y, radius, color = 'black') {
     this.y = y
     this.radius = radius
     this.color = color
-    this.Render = function(){
+    this.Render = function () {
         context = branchArea.context
         context.fillStyle = color;
         context.beginPath();
-        context.arc(this.x, this.y,this.radius , Math.PI / 180 * 0, Math.PI / 180 * 360, false);
+        context.arc(this.x, this.y, this.radius, Math.PI / 180 * 0, Math.PI / 180 * 360, false);
         context.closePath();
         context.fill();
     }
-    
+
 }
 function ringComponent(x, y, outradius, innerradius, color) {
     this.defaultX = x
@@ -90,7 +90,12 @@ function ringComponent(x, y, outradius, innerradius, color) {
     this.startAngle = 0
     this.endAngle = 360
     this.startPoint = 0//0上 1右2下3左
+    this.getX = function () {
+        console.log("hello2")
+        return this.x
+    }
     this.Render = function () {
+        // console.log("hello")
         context = branchArea.context
         context.fillStyle = color;
         context.beginPath();
@@ -116,7 +121,7 @@ function ringComponent(x, y, outradius, innerradius, color) {
         context.beginPath();
         context.arc(this.x, this.y, this.defaultOutradius, Math.PI / 180 * 0, Math.PI / 180 * 360, false);
         return context.isPointInPath(offsetX, offsetY);
-    },
+    }
     this.reset = function () {
         this.x = this.defaultX
         this.y = this.defaultY
@@ -132,18 +137,19 @@ function ringComponent(x, y, outradius, innerradius, color) {
         }
     }
 
+
 }
 function Line(startX, startY, endX, endY, bold = 1, color = 'black') {
     context = branchArea.context
-    context.strokeStyle=color;
-    context.lineWidth=bold;
-    
     context.beginPath();
+    context.strokeStyle = color;
+    context.lineWidth = bold;
+    context.lineCap="round";
     context.moveTo(startX, startY);
     context.lineTo(endX, endY);
     context.closePath();
     context.stroke();
-    
+
 }
 function animateData(startTime, lastTime, component) {
     this.startTime = startTime
@@ -172,6 +178,7 @@ setAnimation = function (type, o) {
 
 }
 var lastframe = 0
+
 function updateBranchArea() {
     branchArea.clear()
     branchArea.frameNo += 1;
@@ -184,30 +191,103 @@ function updateBranchArea() {
             // animateList[i].component.reset()
         }
     }
+    let lastNode
+    let firstTime = true
+    tree.traverseBF(function (node) {
+        // if(node.data.root=='root'){
 
-    tree.traverseBF(function(node){
+        // }
         // console.log(node.data)
-        if(node.data!='root'&&node.data!=undefined&&node.data!=null){
+        if (node.data.root != 'root' && node.data != undefined && node.data != null) {
+            // console.log(node)
             node.data.component.Render()
+            //
+            if (firstTime) {
+
+                lastNode = node
+
+                firstTime = false
+            } else {
+
+                // console.log(node.parent.uid)
+                // console.log(node.parent)
+                if(node.parent==tree){
+                    let startX = lastNode.data.component.x
+                    let startY = lastNode.data.component.y+lastNode.data.component.outradius;
+                    let endX = node.data.component.x
+                    let endY = node.data.component.y-node.data.component.outradius
+                    Line(startX,startY,endX,endY,4,'black')
+                    // Line(lastNode.data.component.x, lastNode.data.component.y, node.data.component.x, node.data.component.y, 2, 'black')
+                }else 
+                if (lastNode.parent==tree||node.parent.data.uid != lastNode.parent.data.uid) {
+                    let startX = node.parent.data.component.x+node.parent.data.component.outradius;
+                    let startY = node.parent.data.component.y
+                    let endX = node.data.component.x-node.data.component.outradius
+                    let endY = node.data.component.y
+                    Line(startX,startY,endX,endY,4,'black')
+                    // Line(node.parent.data.component.x, node.parent.data.component.y, node.data.component.x, node.data.component.y, 2, 'blue')
+                    
+                } else {
+                    let startX = lastNode.data.component.x
+                    let startY = lastNode.data.component.y+lastNode.data.component.outradius;
+                    let endX = node.data.component.x
+                    let endY = node.data.component.y-node.data.component.outradius
+                    Line(startX,startY,endX,endY,4,'orange')
+                    // Line(lastNode.data.component.x, lastNode.data.component.y, node.data.component.x, node.data.component.y, 2, 'orange')
+                    // Line(n.data.component.x,n.data.component.y,node.data.component.x,node.data.component.y,2
+                }
+                
+            }
+            
         }
-        
+        lastNode = node
     })
     // window.requestAnimationFrame(updateBranchArea)
 }
 function startDrawBranch() {
     // window.requestAnimationFrame(updateBranchArea)
-    tree = new Tree('root')
-    let y=20
-    for(let i =0;i<3;i++){
-        data = {
-            component:new ringComponent(20, y, 10, 7, _COLOR.stage),
-            type :'stage',
-            id:i
+    let data = {
+        root: 'root',
+        uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+    }
+    tree = new Tree(data)
+    // console.log(tree)
+    let y1 = 20, y2 = 40, y3 = 20
+    for (let i = 0; i < 3; i++) {
+        let data = {
+            component: new ringComponent(20, y1, 10, 7, _COLOR.stage),
+            type: 'stage',
+            id: i,
+            uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
         }
-        var node = new Node(data)
-        tree._root.children[i]=node
-        
-        y +=50
+        let node = new Node(data)
+        tree._root.children[i] = node
+        node.parent = tree
+        for (let j = 0; j < Math.floor(Math.random() *4 + 1); j++) {
+            let data = {
+                component: new ringComponent(60, y2, 10, 7, _COLOR.story),
+                type: 'story',
+                id: j,
+                uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+            }
+            let storynode = new Node(data)
+            node.children[j] = storynode
+            storynode.parent = node
+            for (let k = 0; k < Math.floor(Math.random() *4 + 1); k++) {
+                let data = {
+                    component: new ringComponent(100, y3, 10, 7, _COLOR.choose),
+                    type: 'choose',
+                    id: k,
+                    uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+                }
+                let chooseNode = new Node(data)
+                storynode.children[k] = chooseNode
+                chooseNode.parent = storynode
+                y3 += 50
+            }
+            y2 += 100
+        }
+        y1 += 150
     }
 
     branchArea.start()
@@ -216,22 +296,22 @@ function startDrawBranch() {
     branchArea.addClickEvent()
 }
 function checkMousePosition(x, y) {
-   
-    tree.traverseBF(function(node){
-        if(node.data!='root'&&node.data!=undefined&&node.data!=null){
-            if(node.data.component.isInPath(x,y)){
-                 node.data.component.outradius = 15
-                 node.data.component.innerradius = 10
-               
+
+    tree.traverseBF(function (node) {
+        if (node.data.root != 'root' && node.data != undefined && node.data != null) {
+            if (node.data.component.isInPath(x, y)) {
+                node.data.component.outradius = 15
+                node.data.component.innerradius = 10
+
             }
-            else{
+            else {
                 node.data.component.reset()
             }
             // console.log(node.data.component)
         }
         return false
     })
-    
+
 }
 
 function everyinterval(n) {
@@ -261,6 +341,9 @@ function Node(data) {
 }
 
 function Tree(data) {
+    data:{
+        uid:122222
+    }
     var node = new Node(data)
     this._root = node
 }
@@ -281,18 +364,18 @@ Tree.prototype.traverseDF = function (callback) {
     })(this._root);
 
 };
-Tree.prototype.traverseBF = function(callback) {
-    var queue =[];
-     
+Tree.prototype.traverseBF = function (callback) {
+    var queue = [];
+
     queue.push(this._root);
- 
+
     currentTree = queue.shift();
- 
-    while(currentTree){
+
+    while (currentTree) {
         for (var i = 0, length = currentTree.children.length; i < length; i++) {
             queue.push(currentTree.children[i]);
         }
- 
+
         callback(currentTree);
         currentTree = queue.shift();
     }
