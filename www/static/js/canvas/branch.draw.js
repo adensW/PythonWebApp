@@ -272,7 +272,9 @@ function checkMousePosition(x, y) {
     })
 
 }
-
+function getData(){
+    
+}
 startDrawBranch()
 
 var stats = new Stats();
