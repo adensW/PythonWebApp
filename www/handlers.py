@@ -121,23 +121,30 @@ def signout(request):
     return r
 
 @get('/')
-def index(*, page='1'):
-    page_index = get_page_index(page)
-    num = yield from Blog.findNumber('count(id)')
-    page = Page(num)
-    if num == 0:
-        blogs = []
-    else:
-        blogs = yield from Blog.findAll(orderBy='created_at desc', limit=(page.offset, page.limit))
+def index():
+    # page_index = get_page_index(page)
+    # num = yield from Blog.findNumber('count(id)')
+    # page = Page(num)
+    # if num == 0:
+    #     blogs = []
+    # else:
+    #     blogs = yield from Blog.findAll(orderBy='created_at desc', limit=(page.offset, page.limit))
     return {
-        '__template__': 'blogs.html',
-        'page': page,
-        'blogs': blogs
+        '__template__': 'index.html'
+        # 'page': page,
+        # 'blogs': blogs
     }
-@get('/game')
+
+@get('/game/text')
 def game():
     return {
-        '__template__':'game.html'
+        '__template__':'textlife.html'
+}
+
+@get('/game/wasteland-survive')
+def game():
+    return {
+        '__template__':'/wastelandsurvive/wastelandsurvive.html'
 }
 
 @post('/api/users')
@@ -268,7 +275,9 @@ def api_create_blog(request, *, name, summary, content):
     blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image, name=name.strip(), summary=summary.strip(), content=content.strip())
     yield from blog.save()
     return blog
+
 from orm import IntegerField
+
 @post('/api/games')
 def api_create_game(request,*,process,stagename,story,chose,refstoryid,author):
     check_admin(request)
@@ -352,3 +361,7 @@ def api_get_users(*, page='1'):
         u.passwd = '******'
     return dict(page=p, users=users)
 
+@get('/api/game/stage')
+def api_get_stage():
+    num = yield from Stage.findAll()
+    return num

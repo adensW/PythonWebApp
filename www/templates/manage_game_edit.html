@@ -10,16 +10,24 @@
             data: mixdata,
             methods: {
                 submit: function (event) {
-                    event.preventDefault();
+                    // event.preventDefault();
                     var $form = $('#vm').find('form');
+                   
                     $form.postJSON(action, this.$data, function (err, r) {
                         if (err) {
+                            // console.log(err)
+                            alert(err.message)
                             $form.showFormError(err);
                         } else {
                             return location.assign('/game');
                         }
                     });
+                },
+                savestage:function(event){
+                    // event.preventDefault();
+                    alert('e')
                 }
+            
             }
         });
         $('#vm').show();
@@ -87,13 +95,15 @@
     <div class='content-edit '>
         <div id='loading'></div>
         <div class="edit-area" id='vm'>
-            <form v-on="submit:submit">
-                <div class=''></div>
+            
+            <form>
+                <div class='aden-alert-danger'></div>
                 <div>
                     <span>进程位置: </span>
-                    <input v-model="process" name='process' />
+                    <input v-model="process" name='process'  />
                     <span>进程名称: </span>
                     <input v-model="stagename" name="stagename" id='stagename' />
+                    <button v-on:click="savestage()" type="button">保存stage</button>
                 </div>
                 <div>
                     <p>事件</p>
@@ -112,7 +122,7 @@
                     <input v-model="author" name='author' id='author' />
                 </div>
                 <div>
-                    <button type="submit">保存</button>
+                    <button v-on:click="submit() " type="submit">保存</button>
                 </div>
             </form>
         </div>

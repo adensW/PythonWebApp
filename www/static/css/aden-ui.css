@@ -173,3 +173,17 @@ a:hover {
 .aden-pagination-right {
     text-align: right
 }
+
+.aden-alert-danger{
+    background: #fff1f0;
+    color: #d85030
+}
+.aden-form-danger {
+    border-color: #dc8d99!important;
+    background: #fff7f8!important;
+    color: #c91032!important
+}
+.uk-hidden {
+    display: none!important;
+    visibility: hidden!important
+}

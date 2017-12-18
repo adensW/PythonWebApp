@@ -224,17 +224,17 @@ $(function () {
             return this.each(function () {
                 var
                     $form = $(this),
-                    $alert = $form && $form.find('.uk-alert-danger'),
+                    $alert = $form && $form.find('.aden-alert-danger'),
                     fieldName = err && err.data;
                 if (! $form.is('form')) {
                     console.error('Cannot call showFormError() on non-form object.');
                     return;
                 }
-                $form.find('input').removeClass('uk-form-danger');
-                $form.find('select').removeClass('uk-form-danger');
-                $form.find('textarea').removeClass('uk-form-danger');
+                $form.find('input').removeClass('aden-form-danger');
+                $form.find('select').removeClass('aden-form-danger');
+                $form.find('textarea').removeClass('aden-form-danger');
                 if ($alert.length === 0) {
-                    console.warn('Cannot find .uk-alert-danger element.');
+                    console.warn('Cannot find .aden-alert-danger element.');
                     return;
                 }
                 if (err) {
@@ -243,12 +243,12 @@ $(function () {
                         $('html,body').animate({ scrollTop: $alert.offset().top - 60 });
                     }
                     if (fieldName) {
-                        $form.find('[name=' + fieldName + ']').addClass('uk-form-danger');
+                        $form.find('[name=' + fieldName + ']').addClass('aden-form-danger');
                     }
                 }
                 else {
                     $alert.addClass('uk-hidden').hide();
-                    $form.find('.uk-form-danger').removeClass('uk-form-danger');
+                    $form.find('.aden-form-danger').removeClass('aden-form-danger');
                 }
             });
         },

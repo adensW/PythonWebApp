@@ -205,6 +205,9 @@ function updateBranchArea() {
 }
 function startDrawBranch() {
     // window.requestAnimationFrame(updateBranchArea)
+    getJSON('/api/game/stage',function(data){
+        console.log(data)
+    })
     let data = {
         root: 'root',
         uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
@@ -272,9 +275,7 @@ function checkMousePosition(x, y) {
     })
 
 }
-function getData(){
-    
-}
+
 startDrawBranch()
 
 var stats = new Stats();
