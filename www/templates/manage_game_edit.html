@@ -11,7 +11,7 @@
             methods: {
                 submit: function (event) {
                     // event.preventDefault();
-                    var $form = $('#vm').find('form');
+                    let $form = $('#vm').find('form');
                    
                     $form.postJSON(action, this.$data, function (err, r) {
                         if (err) {
@@ -19,13 +19,26 @@
                             alert(err.message)
                             $form.showFormError(err);
                         } else {
-                            return location.assign('/game');
+                            return location.assign('/game/text');
                         }
                     });
                 },
                 savestage:function(event){
-                    // event.preventDefault();
-                    alert('e')
+                    let $form = $('#vm').find('form');
+                    d={
+                        stagename:this.$data.stagename,
+                        process:this.$data.process
+                    }
+                    alert(d)
+                    $form.postJSON('/api/game/savestage',d,function(err,r){
+                        if (err) {
+                            // console.log(err)
+                            alert(err.message)
+                            $form.showFormError(err);
+                        } else {
+                            return location.assign('/game/text');
+                        }
+                    })
                 }
             
             }

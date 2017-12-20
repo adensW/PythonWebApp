@@ -136,17 +136,21 @@ def index():
     }
 
 @get('/game/text')
-def game():
+def game_text():
     return {
         '__template__':'textlife.html'
-}
+    }
 
 @get('/game/wasteland-survive')
-def game():
+def game_waste():
     return {
         '__template__':'/wastelandsurvive/wastelandsurvive.html'
 }
-
+@get('/comment')
+def comment():
+    return {
+        '__template__':'comment.html'
+    }
 @post('/api/users')
 def api_register_user(*, email, name, passwd):
     if not name or not name.strip():
@@ -363,5 +367,25 @@ def api_get_users(*, page='1'):
 
 @get('/api/game/stage')
 def api_get_stage():
-    num = yield from Stage.findAll()
-    return num
+    stage = yield from Stage.findAll()
+    print(stage)
+    return dict(stage=stage)
+@get('/api/game/story')
+def api_get_story():
+    story = yield from Story.findAll()
+    return dict(story = story)
+@get('/api/game/chose')
+def api_get_chose():
+    chose = yield from Chose.findAll()
+    return dict(chose = chose)
+@get('/api/game/refstory')
+def api_get_refstory():
+    refstory = yield from refStory.findAll()
+    return dict(refstory = refstory)
+
+@post('/api/game/savestage')
+def appi_save_stage(request,*,stagename,process):
+    stage = Stage(tagid=next_id(),stagename=stagename,process=process)
+    yield from stage.save()
+    return stage
+

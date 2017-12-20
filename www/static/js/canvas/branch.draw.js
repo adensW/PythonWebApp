@@ -160,6 +160,7 @@ function updateBranchArea() {
         // console.log(node.data)
         if (node.data.root != 'root' && node.data != undefined && node.data != null) {
             // console.log(node)
+            
             node.data.component.Render()
             //
             if (firstTime) {
@@ -205,52 +206,89 @@ function updateBranchArea() {
 }
 function startDrawBranch() {
     // window.requestAnimationFrame(updateBranchArea)
-    getJSON('/api/game/stage',function(data){
-        console.log(data)
-    })
-    let data = {
+   
+    
+    let treedata = {
         root: 'root',
         uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
     }
-    tree = new Tree(data)
+    tree = new Tree(treedata)
     // console.log(tree)
     let y1 = 20, y2 = 40, y3 = 20
-    for (let i = 0; i < 3; i++) {
-        let data = {
-            component: new ringComponent(20, y1, 10, 7, _COLOR.stage),
-            type: 'stage',
-            id: i,
-            uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
-        }
-        let node = new Node(data)
-        tree._root.children[i] = node
-        node.parent = tree
-        for (let j = 0; j < Math.floor(Math.random() *4 + 1); j++) {
-            let data = {
-                component: new ringComponent(60, y2, 10, 7, _COLOR.story),
-                type: 'story',
-                id: j,
-                uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+    
+    getJSON('/api/game/stage',function(err,data){
+        // this.data =stage
+        console.log(data.stage.length)
+        for (let i = 0; i < data.stage.length; i++) {
+            let d = {
+                component: new ringComponent(20, y1, 10, 7, _COLOR.stage),
+                type: 'stage',
+                value:data.stage[i]
             }
-            let storynode = new Node(data)
-            node.children[j] = storynode
-            storynode.parent = node
-            for (let k = 0; k < Math.floor(Math.random() *4 + 1); k++) {
-                let data = {
-                    component: new ringComponent(100, y3, 10, 7, _COLOR.choose),
-                    type: 'choose',
-                    id: k,
-                    uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+            let node = new Node(d)
+            tree._root.children[i] = node
+            node.parent = tree
+            y1 += 150
+        }
+    })
+    getJSON('/api/game/story',function(err,data){
+        console.log(data.story.length)
+        
+        for(let i = 0;i<data.story.length;i++){
+            // console.log(data.story[i])
+            tree.traverseBF(function(node){
+                if(node.data.type=='stage'){
+                    // console.log(data.story[i])
+                    if(data.story[i].process==node.data.value.id){
+                        console.log(data.story[i])
+                        let d = {
+                            component: new ringComponent(60, y2, 10, 7, _COLOR.story),
+                            type: 'story',
+                            value:data.story[i]
+                        }
+                        let storynode  = new Node(d)
+                        node.children[i] = storynode
+                        storynode.parent=node
+                        y2+=30
+                    }
                 }
-                let chooseNode = new Node(data)
-                storynode.children[k] = chooseNode
-                chooseNode.parent = storynode
-                y3 += 50
-            }
-            y2 += 100
+            })
         }
-        y1 += 150
-    }
+        
+    })
+    getJSON('/api/game/chose',function(err,data){
+        console.log(data.chose.length)
+    })
+    getJSON('/api/game/refstory',function(err,data){
+        console.log(data.refstory.length)
+    })
+    
+        // for (let j = 0; j < Math.floor(Math.random() *4 + 1); j++) {
+        //     let data = {
+        //         component: new ringComponent(60, y2, 10, 7, _COLOR.story),
+        //         type: 'story',
+        //         id: j,
+        //         uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+        //     }
+        //     let storynode = new Node(data)
+        //     // node.children[j] = storynode
+        //     storynode.parent = node
+        //     for (let k = 0; k < Math.floor(Math.random() *4 + 1); k++) {
+        //         let data = {
+        //             component: new ringComponent(100, y3, 10, 7, _COLOR.choose),
+        //             type: 'choose',
+        //             id: k,
+        //             uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+        //         }
+        //         let chooseNode = new Node(data)
+        //         storynode.children[k] = chooseNode
+        //         chooseNode.parent = storynode
+        //         y3 += 50
+        //     }
+        //     y2 += 100
+        // }
+        
+    
 
     branchArea.start()
 
@@ -264,7 +302,7 @@ function checkMousePosition(x, y) {
             if (node.data.component.isInPath(x, y)) {
                 node.data.component.outradius = 15
                 node.data.component.innerradius = 10
-
+                console.log(node.data.value)
             }
             else {
                 node.data.component.reset()
