@@ -121,23 +121,23 @@ function Line(startX, startY, endX, endY, bold = 1, color = 'black') {
     context.beginPath();
     context.strokeStyle = color;
     context.lineWidth = bold;
-    context.lineCap="round";
+    context.lineCap = "round";
     context.moveTo(startX, startY);
     context.lineTo(endX, endY);
     context.closePath();
     context.stroke();
 
 }
-function polyline(startX, startY, endX, endY, bold = 1, color = 'black'){
+function polyline(startX, startY, endX, endY, bold = 1, color = 'black') {
     context = branchArea.context
     context.beginPath();
     context.strokeStyle = color;
     context.lineWidth = bold;
-    context.lineCap="round";
+    context.lineCap = "round";
     context.moveTo(startX, startY);
-    var x2 = startX +(endX-startX)*(1/3)
+    var x2 = startX + (endX - startX) * (1 / 3)
     var y2 = startY
-    var x3=startX +(endX-startX)*(2/3)
+    var x3 = startX + (endX - startX) * (2 / 3)
     var y3 = endY
     context.lineTo(x2, startY);
     context.lineTo(x3, endY);
@@ -160,7 +160,7 @@ function updateBranchArea() {
         // console.log(node.data)
         if (node.data.root != 'root' && node.data != undefined && node.data != null) {
             // console.log(node)
-            
+
             node.data.component.Render()
             //
             if (firstTime) {
@@ -172,33 +172,34 @@ function updateBranchArea() {
 
                 // console.log(node.parent.uid)
                 // console.log(node.parent)
-                if(node.parent==tree){
+                if (node.parent == tree) {
                     let startX = lastNode.data.component.x
-                    let startY = lastNode.data.component.y+lastNode.data.component.outradius;
+                    let startY = lastNode.data.component.y + lastNode.data.component.outradius;
                     let endX = node.data.component.x
-                    let endY = node.data.component.y-node.data.component.outradius
-                    Line(startX,startY,endX,endY,4,'black')
+                    let endY = node.data.component.y - node.data.component.outradius
+                    Line(startX, startY, endX, endY, 4, 'black')
                     // Line(lastNode.data.component.x, lastNode.data.component.y, node.data.component.x, node.data.component.y, 2, 'black')
-                }else if (lastNode.parent==tree||node.parent.data.uid != lastNode.parent.data.uid) {
-                    let startX = node.parent.data.component.x+node.parent.data.component.outradius;
+                } else if (lastNode.parent == tree || node.parent.data.uid != lastNode.parent.data.uid) {
+                    let startX = node.parent.data.component.x + node.parent.data.component.outradius;
                     let startY = node.parent.data.component.y
-                    let endX = node.data.component.x-node.data.component.outradius
+                    let endX = node.data.component.x - node.data.component.outradius
                     let endY = node.data.component.y
-                    polyline(startX,startY,endX,endY,4,'blue')
+                    polyline(startX, startY, endX, endY, 4, 'blue')
                     // Line(node.parent.data.component.x, node.parent.data.component.y, node.data.component.x, node.data.component.y, 2, 'blue')
-                    
+
                 } else {
                     let startX = lastNode.data.component.x
-                    let startY = lastNode.data.component.y+lastNode.data.component.outradius;
+                    let startY = lastNode.data.component.y + lastNode.data.component.outradius;
                     let endX = node.data.component.x
-                    let endY = node.data.component.y-node.data.component.outradius
-                    Line(startX,startY,endX,endY,4,'orange')
+                    let endY = node.data.component.y - node.data.component.outradius
+                    Line(startX, startY, endX, endY, 4, 'orange')
                     // Line(lastNode.data.component.x, lastNode.data.component.y, node.data.component.x, node.data.component.y, 2, 'orange')
                     // Line(n.data.component.x,n.data.component.y,node.data.component.x,node.data.component.y,2
                 }
-                
+
+
             }
-            
+
         }
         lastNode = node
     })
@@ -206,89 +207,153 @@ function updateBranchArea() {
 }
 function startDrawBranch() {
     // window.requestAnimationFrame(updateBranchArea)
-   
-    
+
+
     let treedata = {
         root: 'root',
         uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
     }
     tree = new Tree(treedata)
     // console.log(tree)
-    let y1 = 20, y2 = 40, y3 = 20
-    
-    getJSON('/api/game/stage',function(err,data){
+    let y1 = 20, y2 = 40, y3 = 20, y4 = 40
+
+    getJSON('/api/game/stage', function (err, data) {
         // this.data =stage
         console.log(data.stage.length)
         for (let i = 0; i < data.stage.length; i++) {
             let d = {
                 component: new ringComponent(20, y1, 10, 7, _COLOR.stage),
                 type: 'stage',
-                value:data.stage[i]
+                value: data.stage[i],
+                uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
             }
             let node = new Node(d)
             tree._root.children[i] = node
             node.parent = tree
             y1 += 150
         }
-    })
-    getJSON('/api/game/story',function(err,data){
-        console.log(data.story.length)
-        
-        for(let i = 0;i<data.story.length;i++){
+        getJSON('/api/game/story', function (err, data) {
+            // console.log(data.story)
+            
+
             // console.log(data.story[i])
-            tree.traverseBF(function(node){
-                if(node.data.type=='stage'){
-                    // console.log(data.story[i])
-                    if(data.story[i].process==node.data.value.id){
-                        console.log(data.story[i])
-                        let d = {
-                            component: new ringComponent(60, y2, 10, 7, _COLOR.story),
-                            type: 'story',
-                            value:data.story[i]
+            tree.traverseBF(function (node) {
+                let childrenIndex = 0
+                if (node.data.type == 'stage') {
+                    
+                    for (let i = 0; i < data.story.length; i++) {
+                        // console.log(arr[i])
+                        if (data.story[i].process == node.data.value.id) {
+                            // console.log(arr[i])
+                            let d = {
+                                component: new ringComponent(60, y2, 10, 7, _COLOR.story),
+                                type: 'story',
+                                value: data.story[i],
+                                uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+                            }
+                            let storynode = new Node(d)
+                            node.children[childrenIndex] = storynode
+                            childrenIndex +=1
+                            storynode.parent = node
+                            y2 += 30
+                            // arr = arr.filter(function(item,index,array){
+                            //     if(index!=i)
+                            //     {return true}
+                            // })
                         }
-                        let storynode  = new Node(d)
-                        node.children[i] = storynode
-                        storynode.parent=node
-                        y2+=30
                     }
                 }
             })
-        }
-        
-    })
-    getJSON('/api/game/chose',function(err,data){
-        console.log(data.chose.length)
-    })
-    getJSON('/api/game/refstory',function(err,data){
-        console.log(data.refstory.length)
-    })
+            getJSON('/api/game/chose', function (err, data) {
+                console.log(data.chose.length)
+
+                // console.log(data.story[i])
+                tree.traverseBF(function (node) {
+                    let childrenIndex = 0
+                    if (node.data.type == 'story') {
+                        for (let i = 0; i < data.chose.length; i++) {
+                            // console.log(data.story[i])
+                            if (data.chose[i].storyid == node.data.value.id) {
+                                // console.log(data.chose[i])
+                                let d = {
+                                    component: new ringComponent(100, y3, 10, 7, _COLOR.choose),
+                                    type: 'chose',
+                                    value: data.chose[i],
+                                    uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+                                }
+                                let choseNode = new Node(d)
+                                node.children[childrenIndex] = choseNode
+                                childrenIndex +=1
+                                choseNode.parent = node
+                                y3 += 30
+                            }
+                        }
+                    }
+                })
+                getJSON('/api/game/refstory', function (err, data) {
+                    console.log(data.refstory.length)
+
+                    // console.log(data.story[i])
+                    tree.traverseBF(function (node) {
+                        let childrenIndex = 0
+                        if (node.data.type == 'chose') {
+                            for (let i = 0; i < data.refstory.length; i++) {
+                                // console.log(data.story[i])
+                                if (data.refstory[i].chooseid == node.data.value.id) {
+                                    // console.log(data.refstory[i])
+                                    let d = {
+                                        component: new ringComponent(130, y4, 10, 7, _COLOR.refstory),
+                                        type: 'refstory',
+                                        value: data.refstory[i],
+                                        uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+                                    }
+                                    let refstoryNode = new Node(d)
+                                    node.children[childrenIndex] = refstoryNode
+                                    childrenIndex +=1
+                                    refstoryNode.parent = node
+                                    y4 += 30
+                                    // console.log(y4)
+                                }
+                            }
+                        }
+                    })
+                    
+                })
+            })
+        })
     
-        // for (let j = 0; j < Math.floor(Math.random() *4 + 1); j++) {
-        //     let data = {
-        //         component: new ringComponent(60, y2, 10, 7, _COLOR.story),
-        //         type: 'story',
-        //         id: j,
-        //         uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
-        //     }
-        //     let storynode = new Node(data)
-        //     // node.children[j] = storynode
-        //     storynode.parent = node
-        //     for (let k = 0; k < Math.floor(Math.random() *4 + 1); k++) {
-        //         let data = {
-        //             component: new ringComponent(100, y3, 10, 7, _COLOR.choose),
-        //             type: 'choose',
-        //             id: k,
-        //             uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
-        //         }
-        //         let chooseNode = new Node(data)
-        //         storynode.children[k] = chooseNode
-        //         chooseNode.parent = storynode
-        //         y3 += 50
-        //     }
-        //     y2 += 100
-        // }
-        
-    
+        console.log(tree)
+    })
+
+
+
+
+    // for (let j = 0; j < Math.floor(Math.random() *4 + 1); j++) {
+    //     let data = {
+    //         component: new ringComponent(60, y2, 10, 7, _COLOR.story),
+    //         type: 'story',
+    //         id: j,
+    //         uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+    //     }
+    //     let storynode = new Node(data)
+    //     // node.children[j] = storynode
+    //     storynode.parent = node
+    //     for (let k = 0; k < Math.floor(Math.random() *4 + 1); k++) {
+    //         let data = {
+    //             component: new ringComponent(100, y3, 10, 7, _COLOR.choose),
+    //             type: 'choose',
+    //             id: k,
+    //             uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
+    //         }
+    //         let chooseNode = new Node(data)
+    //         storynode.children[k] = chooseNode
+    //         chooseNode.parent = storynode
+    //         y3 += 50
+    //     }
+    //     y2 += 100
+    // }
+
+
 
     branchArea.start()
 
@@ -336,7 +401,7 @@ function Node(data) {
 }
 
 function Tree(data) {
-   
+
     var node = new Node(data)
     this._root = node
 }

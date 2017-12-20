@@ -370,14 +370,17 @@ def api_get_stage():
     stage = yield from Stage.findAll()
     print(stage)
     return dict(stage=stage)
+
 @get('/api/game/story')
 def api_get_story():
     story = yield from Story.findAll()
     return dict(story = story)
+
 @get('/api/game/chose')
 def api_get_chose():
     chose = yield from Chose.findAll()
     return dict(chose = chose)
+
 @get('/api/game/refstory')
 def api_get_refstory():
     refstory = yield from refStory.findAll()
