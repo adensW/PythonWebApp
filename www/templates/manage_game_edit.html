@@ -1,13 +1,33 @@
-{% extends '__base__.html' %} {% block title %}编辑游戏{% endblock %} {% block beforehead %}
+{% extends '__base__.html' %} {% block title %}编辑游戏{% endblock %}
+
+{% block beforehead %}
+<script src="/static/js/myvue/observer.js"></script>
+<script src="/static/js/myvue/js/watcher.js"></script>
+<script src="/static/js/myvue/js/compile.js"></script>
+<script src="/static/js/myvue/js/mvvm.js"></script>
 <script>
     var
         ID = '{{ id }}',
         action = '{{ action }}';
 
-    function initVM(mixdata) {
-        var vm = new Vue({
+   
+    
+    function initVM() {
+        var vm = new MVVM({
             el: '#vm',
-            data: mixdata,
+            data:{
+                process: '',
+                stagename: '',
+                story: '',
+                chose: '',
+                refstoryid: '',
+                author: ''
+            },
+            // watch:{
+            //     process:function(val){
+            //         this.process = val
+            //     }
+            // },
             methods: {
                 submit: function (event) {
                     // event.preventDefault();
@@ -23,13 +43,14 @@
                         }
                     });
                 },
-                savestage:function(event){
+                savestage:function(){
+                    // alert("1")
                     let $form = $('#vm').find('form');
                     d={
                         stagename:this.$data.stagename,
                         process:this.$data.process
                     }
-                    alert(d)
+                    console.log(d)
                     $form.postJSON('/api/game/savestage',d,function(err,r){
                         if (err) {
                             // console.log(err)
@@ -46,25 +67,8 @@
         $('#vm').show();
     }
     $(function () {
-        if (ID) {
-            getJSON('/api/game/' + ID, function (err, blog) {
-                if (err) {
-                    return fatal(err);
-                }
-                $('#loading').hide();
-                initVM(blog);
-            });
-        } else {
-            $('#loading').hide();
-            initVM({
-                process: '',
-                stagename: '',
-                story: '',
-                chose: '',
-                refstoryid: '',
-                author: ''
-            });
-        }
+        $('#loading').hide();
+        initVM();
     });
 
 </script>
@@ -108,12 +112,13 @@
     <div class='content-edit '>
         <div id='loading'></div>
         <div class="edit-area" id='vm'>
-            
             <form>
                 <div class='aden-alert-danger'></div>
                 <div>
                     <span>进程位置: </span>
-                    <input v-model="process" name='process'  />
+                    <input v-model="process"  name='process' />
+                   
+                    <!-- <div v-text='process'></div>45 -->
                     <span>进程名称: </span>
                     <input v-model="stagename" name="stagename" id='stagename' />
                     <button v-on:click="savestage()" type="button">保存stage</button>

@@ -24,17 +24,12 @@ var branchArea = {
     addMouseOverEvent: function () {
         let lastElement = [];
         this.canvas.addEventListener('mousemove', function (e) {
-            checkMousePosition(e.offsetX, e.offsetY)
+            MouseOverHandler(e.offsetX, e.offsetY)
         })
     },
     addClickEvent: function () {
         this.canvas.addEventListener('click', function (e) {
-            var check = checkMousePosition(e.offsetX, e.offsetY)
-
-            // if (check.isIn) {
-            //     console.log('hello')
-            //     animateList.push(new animateData(new Date().getTime(), 2000, check.element))
-            // }
+           MouseClickHandler(e.offsetX, e.offsetY)
         })
     }
 }
@@ -322,52 +317,21 @@ function startDrawBranch() {
             })
         })
     
-        console.log(tree)
+        // console.log(tree)
     })
-
-
-
-
-    // for (let j = 0; j < Math.floor(Math.random() *4 + 1); j++) {
-    //     let data = {
-    //         component: new ringComponent(60, y2, 10, 7, _COLOR.story),
-    //         type: 'story',
-    //         id: j,
-    //         uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
-    //     }
-    //     let storynode = new Node(data)
-    //     // node.children[j] = storynode
-    //     storynode.parent = node
-    //     for (let k = 0; k < Math.floor(Math.random() *4 + 1); k++) {
-    //         let data = {
-    //             component: new ringComponent(100, y3, 10, 7, _COLOR.choose),
-    //             type: 'choose',
-    //             id: k,
-    //             uid: Math.floor(Math.random() * 1000 + 0) + ":" + new Date().getTime()
-    //         }
-    //         let chooseNode = new Node(data)
-    //         storynode.children[k] = chooseNode
-    //         chooseNode.parent = storynode
-    //         y3 += 50
-    //     }
-    //     y2 += 100
-    // }
-
-
-
     branchArea.start()
 
     branchArea.addMouseOverEvent()
     branchArea.addClickEvent()
 }
-function checkMousePosition(x, y) {
+function MouseOverHandler(x, y) {
 
     tree.traverseBF(function (node) {
         if (node.data.root != 'root' && node.data != undefined && node.data != null) {
             if (node.data.component.isInPath(x, y)) {
                 node.data.component.outradius = 15
                 node.data.component.innerradius = 10
-                console.log(node.data.value)
+                // console.log(node.data.value)
             }
             else {
                 node.data.component.reset()
@@ -378,7 +342,17 @@ function checkMousePosition(x, y) {
     })
 
 }
-
+function MouseClickHandler(x,y){
+    tree.traverseBF(function (node) {
+        if (node.data.root != 'root' && node.data != undefined && node.data != null) {
+            if (node.data.component.isInPath(x, y)) {
+                
+                console.log(node.data.value)
+            }
+        }
+        return false
+    })
+}
 startDrawBranch()
 
 var stats = new Stats();
