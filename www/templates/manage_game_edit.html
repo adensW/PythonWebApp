@@ -1,113 +1,47 @@
-{% extends '__base__.html' %} {% block title %}编辑游戏{% endblock %}
+{% extends '__base__.html' %} {% block title %}编辑游戏{% endblock %} {% block beforehead %}
+<!-- <script src="/static/js/myvue/observer.js"></script>
+<script src="/static/js/myvue/watcher.js"></script>
+<script src="/static/js/myvue/compile.js"></script>
+<script src="/static/js/myvue/mvvm.js"></script> -->
 
-{% block beforehead %}
-<script src="/static/js/myvue/observer.js"></script>
-<script src="/static/js/myvue/js/watcher.js"></script>
-<script src="/static/js/myvue/js/compile.js"></script>
-<script src="/static/js/myvue/js/mvvm.js"></script>
-<script>
-    var
-        ID = '{{ id }}',
-        action = '{{ action }}';
-
-   
-    
-    function initVM() {
-        var vm = new MVVM({
-            el: '#vm',
-            data:{
-                process: '',
-                stagename: '',
-                story: '',
-                chose: '',
-                refstoryid: '',
-                author: ''
-            },
-            // watch:{
-            //     process:function(val){
-            //         this.process = val
-            //     }
-            // },
-            methods: {
-                submit: function (event) {
-                    // event.preventDefault();
-                    let $form = $('#vm').find('form');
-                   
-                    $form.postJSON(action, this.$data, function (err, r) {
-                        if (err) {
-                            // console.log(err)
-                            alert(err.message)
-                            $form.showFormError(err);
-                        } else {
-                            return location.assign('/game/text');
-                        }
-                    });
-                },
-                savestage:function(){
-                    // alert("1")
-                    let $form = $('#vm').find('form');
-                    d={
-                        stagename:this.$data.stagename,
-                        process:this.$data.process
-                    }
-                    console.log(d)
-                    $form.postJSON('/api/game/savestage',d,function(err,r){
-                        if (err) {
-                            // console.log(err)
-                            alert(err.message)
-                            $form.showFormError(err);
-                        } else {
-                            return location.assign('/game/text');
-                        }
-                    })
-                }
-            
-            }
-        });
-        $('#vm').show();
-    }
-    $(function () {
-        $('#loading').hide();
-        initVM();
-    });
-
-</script>
 <style>
     .content-branch {
         float: left;
         width: 300px;
         height: 500px;
     }
-    .content-edit{
+
+    .content-edit {
         padding-left: 10px;
         float: left;
     }
-    .clearfix:after{
-        content: "020"; 
-        display: block; 
-        height: 0; 
-        clear: both; 
-        visibility: hidden;  
-        }
-      
-      .clearfix {
-        /* 触发 hasLayout */ 
-        zoom: 1; 
-        }
+
+    .clearfix:after {
+        content: "020";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+
+    .clearfix {
+        /* 触发 hasLayout */
+        zoom: 1;
+    }
+
     /* .branch{
         width:300px;
         height:500px;
     } */
-
 </style>
 {%endblock%} {% block content %}
 
 <h1>Game Manage</h1>
 <div class="aden-container clearfix">
     <div class="content-branch">
-        
+
         <canvas class='branch' id='branch'></canvas>
-        
+
     </div>
     <div class='content-edit '>
         <div id='loading'></div>
@@ -116,8 +50,8 @@
                 <div class='aden-alert-danger'></div>
                 <div>
                     <span>进程位置: </span>
-                    <input v-model="process"  name='process' />
-                   
+                    <input type="text" v-model='process' name='process'>
+
                     <!-- <div v-text='process'></div>45 -->
                     <span>进程名称: </span>
                     <input v-model="stagename" name="stagename" id='stagename' />
@@ -146,6 +80,68 @@
         </div>
     </div>
 </div>
+<script>
+    var
+        ID = '{{ id }}',
+        action = '{{ action }}';
+
+    var vm = new Vue({
+        el: '#vm',
+        data: {
+            process: '',
+            stagename: '',
+            story: '',
+            chose: '',
+            refstoryid: '',
+            author: ''
+        },
+        methods: {
+            submit: function (event) {
+                // event.preventDefault();
+                let $form = $('#vm').find('form');
+
+                $form.postJSON(action, this.$data, function (err, r) {
+                    if (err) {
+                        // console.log(err)
+                        alert(err.message)
+                        $form.showFormError(err);
+                    } else {
+                        return location.assign('/game/text');
+                    }
+                });
+            },
+            savestage: function () {
+                // alert("1")
+                let $form = $('#vm').find('form');
+                d = {
+                    stagename: this.$data.stagename,
+                    process: this.$data.process
+                }
+                console.log(d)
+                $form.postJSON('/api/game/savestage', d, function (err, r) {
+                    if (err) {
+                        // console.log(err)
+                        alert(err.message)
+                        $form.showFormError(err);
+                    } else {
+                        return location.assign('/game/text');
+                    }
+                })
+            }
+
+        }
+    });
+    function initVM() {
+        $('#vm').show();
+    }
+    $(function () {
+        //数据加载方面
+
+
+        $('#loading').hide();
+        initVM();
+    });
+
+</script>
 <script src='/static/js/canvas/stats.js'></script>
-<script src='/static/js/canvas/branch.draw.js'></script>
-{% endblock %}
+<script src='/static/js/canvas/branch.draw.js'></script> {% endblock %}
