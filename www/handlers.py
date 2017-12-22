@@ -318,7 +318,7 @@ def api_create_comments(id,request,*,content):
     user = request.__user__
     if user is None:
         raise APIPermissionError('Please signin first')
-    if not content or not content.strip:
+    if not content or not content.strip():
         raise APIValueError('content')
     blog = yield from Blog.find(id)
     if blog is None:
@@ -388,6 +388,10 @@ def api_get_refstory():
 
 @post('/api/game/savestage')
 def appi_save_stage(request,*,stagename,process):
+    if not stagename or not stagename.strip():
+        raise APIValueError('stagename','stagename cannot be empty')
+    if not process or not process.strip():
+        raise APIValueError('process','process cannot be empty')
     stage = Stage(tagid=next_id(),stagename=stagename,process=process)
     yield from stage.save()
     return stage

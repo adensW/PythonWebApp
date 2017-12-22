@@ -346,7 +346,7 @@ function MouseClickHandler(x,y){
     tree.traverseBF(function (node) {
         if (node.data.root != 'root' && node.data != undefined && node.data != null) {
             if (node.data.component.isInPath(x, y)) {
-                
+                console.log(node.data.type)
                 console.log(node.data.value)
             }
         }
