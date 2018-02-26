@@ -187,3 +187,10 @@ a:hover {
     display: none!important;
     visibility: hidden!important
 }
+.aden-divide{
+    height:2px;
+    width: 100%;
+}
+.aden-blue{
+    background-color: #00a8e6;
+}

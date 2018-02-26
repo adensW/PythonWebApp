@@ -49,14 +49,15 @@
             <form>
                 <div class='aden-alert-danger'></div>
                 <div>
-                    <span>进程位置: </span>
-                    <input type="text" v-model='process' name='process'>
+                    <span>进程id: </span>
+                    <input type="text" v-model='process' name='process' class='readonly-trigger' >
 
                     <!-- <div v-text='process'></div>45 -->
                     <span>进程名称: </span>
                     <input v-model="stagename" name="stagename" id='stagename' />
                     <button v-on:click="savestage()" type="button">保存stage</button>
                 </div>
+                <div class='aden-divide aden-blue'></div>
                 <div>
                     <p>事件</p>
                     <textarea v-model="story" name=story id='story'></textarea>
@@ -89,7 +90,7 @@
         el: '#vm',
         data: {
             process: '',
-            stagename: '',
+            stagename: 'default',
             story: '',
             chose: '',
             refstoryid: '',
